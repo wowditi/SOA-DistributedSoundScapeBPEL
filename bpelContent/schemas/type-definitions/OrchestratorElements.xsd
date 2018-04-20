@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.example.org/OrchestratorElements/"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://www.example.org/OrchestratorElements/"
+	xmlns:types="http://www.example.org/SoundScapeDataTypes/" xmlns:pref="http://www.example.org/RegistrationServiceElements/">
+	<import schemaLocation="SoundScapeDataTypes.xsd"
+		namespace="http://www.example.org/SoundScapeDataTypes/">
+	</import>
+
+
+
+
+
+
+
+	<import schemaLocation="RegistrationServiceElements.xsd" namespace="http://www.example.org/RegistrationServiceElements/"></import>
+	<complexType name="DeleteSongRequest">
+		<sequence>
+			<element name="Link" type="types:Link"></element>
+			<element name="Speakers" type="types:SpeakerDeviceArray"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="IsSongLoadedRequest">
+		<sequence>
+			<element name="Link" type="types:Link"></element>
+			<element name="Speakers" type="types:SpeakerDeviceArray"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="UploadSongRequest">
+		<sequence>
+			<element name="Link" type="types:Link"></element>
+			<element name="Speakers" type="types:SpeakerDeviceArray"></element>
+		</sequence>
+	</complexType>
+
+
+	<complexType name="FunctionCall">
+		<choice>
+			<element name="ChangeSpeakerPosition" type="string"></element>
+			<element name="SendPlaybackCommand" type="string"></element>
+			<element name="UploadSong" type="types:Link"></element>
+			<element name="DeleteSong" type="types:Link"></element>
+		</choice>
+	</complexType>
+
+	<element name="FunctionRequest" type="tns:FunctionCall"></element>
+
+
+	<element name="ConfirmRegistrationMessage"
+		type="tns:RegisterUserResponse">
+	</element>
+
+	<complexType name="RegisterUserResponse">
+		<sequence>
+			<element name="RegisterUserReponse" type="boolean"></element>
+			<element name="User" type="types:GeneralDevice"></element>
+		</sequence>
+	</complexType>
+
+
+	<complexType name="FunctionCallWithUser">
+		<sequence>
+			<element name="FunctionCall" type="tns:FunctionCall"></element>
+			<element name="User" type="types:GeneralDevice"></element>
+		</sequence>
+	</complexType>
+</schema>

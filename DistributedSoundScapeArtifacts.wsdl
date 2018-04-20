@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:cs="http://www.example.org/ControlServiceElements/" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:rs="http://www.example.org/RegistrationServiceElements/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ssdt="http://www.example.org/SoundScapeDataTypes/" xmlns:tns="DistributedSoundScape" xmlns:types="http://www.example.org/OrchestratorElements/" xmlns:us="http://www.example.org/UploadServiceElements/" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="DistributedSoundScape" targetNamespace="DistributedSoundScape">
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		TYPE DEFINITION - List of types participating in this BPEL process The BPEL 
+		Designer will generate default request and response types but you can define 
+		or import any XML Schema type and use them as part of the message types. 
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <import location="schemas/type-definitions/OrchestratorElements.xsd" namespace="http://www.example.org/OrchestratorElements/"/>
+    <types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="DistributedSoundScape">
+
+			<import namespace="http://www.example.org/RegistrationServiceElements/" schemaLocation="schemas/type-definitions/RegistrationServiceElements.xsd"/>
+
+			<import namespace="http://www.example.org/ControlServiceElements/" schemaLocation="schemas/type-definitions/ControlServiceElements.xsd"/>
+
+			<import namespace="http://www.example.org/UploadServiceElements/" schemaLocation="schemas/type-definitions/UploadServiceElements.xsd"/>
+
+			<import namespace="http://www.example.org/OrchestratorElements/" schemaLocation="schemas/type-definitions/OrchestratorElements.xsd"/>
+
+			<import namespace="http://www.example.org/SoundScapeDataTypes/" schemaLocation="schemas/type-definitions/SoundScapeDataTypes.xsd"/>
+		</schema>
+	</types>
+
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		MESSAGE TYPE DEFINITION - Definition of the message types used as part of 
+		the port type defintions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<message name="InitialMessage">
+		<part element="us:UploadSongRequest" name="RegisterUserRequest"/>
+	</message>
+	<message name="FunctionRequest">
+		<part element="types:FunctionRequest" name="FunctionRequest"/>
+	</message>
+	<message name="ConfirmRegistrationMessage">
+		<part element="rs:RegisterUserResponse" name="RegisterUserResponse"/>
+	</message> 
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		PORT TYPE DEFINITION - A port type groups a set of operations into a logical 
+		service unit. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+	<!-- portType implemented by the DistributedSoundScape BPEL process -->
+	<portType name="DistributedSoundScape">
+		<operation name="process">
+			<input message="tns:InitialMessage"/> 
+		</operation>
+		<operation name="callFunction">
+			<input message="tns:FunctionRequest"/>
+		</operation>
+	</portType>
+
+	<portType name="DistributedSoundScapeCallback">
+		<operation name="onResult">
+			<input message="tns:ConfirmRegistrationMessage"/>
+		</operation>
+	</portType>
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		PARTNER LINK TYPE DEFINITION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<plnk:partnerLinkType name="DistributedSoundScape">
+		<plnk:role name="DistributedSoundScapeProvider" portType="tns:DistributedSoundScape"/>
+		<plnk:role name="DistributedSoundScapeRequester" portType="tns:DistributedSoundScapeCallback"/>
+	</plnk:partnerLinkType>
+
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		BINDING DEFINITION - Defines the message format and protocol details for 
+		a web service. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<binding name="DistributedSoundScapeBinding" type="tns:DistributedSoundScape">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="process">
+			<soap:operation soapAction="DistributedSoundScape/process"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+		</operation>
+		<operation name="callFunction">
+			<soap:operation soapAction="DistributedSoundScape/callFunction"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+		</operation>
+	</binding>
+
+	<binding name="DistributedSoundScapeCallbackBinding" type="tns:DistributedSoundScapeCallback">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="onResult">
+			<soap:operation soapAction="DistributedSoundScape/onResult"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+		</operation>
+	</binding>
+ 
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		SERVICE DEFINITION - A service groups a set of ports into a service unit. 
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<service name="DistributedSoundScapeServiceCallback">
+		<port binding="tns:DistributedSoundScapeCallbackBinding" name="DistributedSoundScapePortCallbackPort">
+			<soap:address location="http://localhost:8181/onResult"/>
+		</port>
+	</service>
+
+	<service name="DistributedSoundScapeService">
+		<port binding="tns:DistributedSoundScapeBinding" name="DistributedSoundScapePort">
+			<soap:address location="http://localhost:8080/ode/processes/DistributedSoundScape"/>
+		</port>
+	</service>
+</definitions>

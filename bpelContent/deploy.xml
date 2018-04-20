@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deploy xmlns="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:DistributedSoundScape="DistributedSoundScape" xmlns:RegistrationService="http://www.example.org/RegistrationService/" xmlns:UploadService="http://www.example.org/UploadService/">
+  <process name="DistributedSoundScape:DistributedSoundScape">
+    <active>true</active>
+    <retired>false</retired>
+    <process-events generate="all"/>
+    <provide partnerLink="client">
+      <service name="DistributedSoundScape:DistributedSoundScapeService" port="DistributedSoundScapePort"/>
+    </provide>
+    <provide partnerLink="UploadService">
+      <service name="UploadService:UploadCallbackService" port="UploadCallbackServiceSOAP"/>
+    </provide>
+    <invoke partnerLink="client">
+      <service name="DistributedSoundScape:DistributedSoundScapeServiceCallback" port="DistributedSoundScapePortCallbackPort"/>
+    </invoke>
+    <invoke partnerLink="RegistrationService">
+      <service name="RegistrationService:RegistrationService" port="RegistrationServiceSOAP"/>
+    </invoke>
+    <invoke partnerLink="UploadService">
+      <service name="UploadService:UploadService" port="UploadServiceSOAP"/>
+    </invoke>
+  </process>
+</deploy>
