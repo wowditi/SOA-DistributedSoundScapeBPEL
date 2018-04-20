@@ -91,15 +91,19 @@
 		<bpel:variable name="UploadSongRequest"
 			messageType="us:UploadSongRequest">
 		</bpel:variable>
+		<bpel:variable name="UploadSongRequest2"
+			messageType="us:UploadSongRequest">
+		</bpel:variable>
 
 		<bpel:variable name="UploadSongResponse"
 			messageType="us:UploadSongResponse"></bpel:variable>
 
-        <bpel:variable name="xslFile" type="ns4:string">
-            <bpel:from>
-                <bpel:literal xml:space="preserve">test.xsl</bpel:literal>
-            </bpel:from>
-        </bpel:variable>
+		<bpel:variable name="xslFile" type="ns4:string">
+			<bpel:from>
+				<bpel:literal xml:space="preserve">test.xsl</bpel:literal>
+			</bpel:from>
+		</bpel:variable>
+        
     </bpel:variables>
 
 	<!-- ================================================================= -->
@@ -126,86 +130,60 @@
 						xmlns:tns="http://www.example.org/UploadServiceElements/"
 						xmlns:tns1="http://www.example.org/SoundScapeDataTypes/"
 						xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <Link>
-    <Type>ftp</Type>
-    <Address>Address</Address>
-  </Link>
-  <Speakers>
-  </Speakers>
-  <conversationId>id</conversationId>
-</tns:UploadSongRequest></bpel:literal>
+	  <Link>
+	    <Type>ftp</Type>
+	    <Address>Address</Address>
+	  </Link>
+	  <Speakers>
+	  </Speakers>
+	  <conversationId>id</conversationId>
+	</tns:UploadSongRequest></bpel:literal>
 				</bpel:from>
 				<bpel:to variable="UploadSongRequest" part="Request"></bpel:to>
 			</bpel:copy>
 			<bpel:copy>
 				<bpel:from
 					expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
-                    <![CDATA[$InitialMessage.RegisterUserRequest//Speakers]]>
+	                    <![CDATA[$InitialMessage.RegisterUserRequest//Speakers]]>
 				</bpel:from>
 				<bpel:to
 					expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
-                    <![CDATA[$UploadSongRequest.Request//Speakers]]>
+	                    <![CDATA[$UploadSongRequest.Request//Speakers]]>
 				</bpel:to>
 			</bpel:copy>
 			<bpel:copy>
 				<bpel:from
 					expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
-                    <![CDATA[$InitialMessage.RegisterUserRequest//Link]]>
+	                    <![CDATA[$InitialMessage.RegisterUserRequest//Link]]>
 				</bpel:from>
 				<bpel:to
 					expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
-                    <![CDATA[$UploadSongRequest.Request//Link]]>
+	                    <![CDATA[$UploadSongRequest.Request//Link]]>
 				</bpel:to>
 			</bpel:copy>
-			<!-- 
-			<bpel:copy xmlns:ext="java:com.example.xpath.Random">
-        		<bpel:from expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0">
-                    <![CDATA[ext:random()]]>
-                </bpel:from>
-				<bpel:to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0">
-                    <![CDATA[$UploadSongRequest.Request//conversationId]]>
-                </bpel:to>
-			</bpel:copy>
-			 -->
-			 <bpel:copy>
-        		<bpel:from>
-                    <![CDATA[bpel:doXslTransform("HelloXslWorld.xsl", $UploadSongRequest.Request//conversationId)]]>
-                </bpel:from>
-				<bpel:to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0">
-                    <![CDATA[$UploadSongRequest.Request//conversationId]]>
-                </bpel:to>
+			<bpel:copy>
+				<bpel:from>
+	                    <![CDATA[bpel:doXslTransform("HelloXslWorld.xsl", $UploadSongRequest.Request//conversationId)]]>
+				</bpel:from>
+				<bpel:to
+					expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0">
+	                    <![CDATA[$UploadSongRequest.Request//conversationId]]>
+				</bpel:to>
 			</bpel:copy>
 		</bpel:assign>
-
-		<!-- <bpel:reply partnerLink="client" operation="onResult" portType="tns:DistributedSoundScape" 
-			variable="ConfirmRegistrationMessage" /> -->
-		<bpel:flow>
-			<bpel:invoke name="UploadSong" partnerLink="UploadService"
-				portType="us:UploadService" operation="UploadSong"
-				inputVariable="UploadSongRequest">
-				<bpel:correlations>
-					<bpel:correlation set="UploadCorrelationSet"
-						initiate="yes"></bpel:correlation>
-				</bpel:correlations>
-			</bpel:invoke>
-			<bpel:invoke name="UploadSong" partnerLink="UploadService"
-				portType="us:UploadService" operation="UploadSong"
-				inputVariable="UploadSongRequest">
-				<bpel:correlations>
-					<bpel:correlation set="UploadCorrelationSet"
-						initiate="yes"></bpel:correlation>
-				</bpel:correlations>
-			</bpel:invoke>
-		</bpel:flow>
 		
-		<bpel:receive name="receiveUploadSongCallback"
-			partnerLink="UploadService" portType="us:UploadCallbackService"
-			operation="UploadSongCallback" variable="UploadSongResponse">
+		
+		
+		<bpel:invoke name="UploadSong" partnerLink="UploadService"
+			portType="us:UploadService" operation="UploadSong"
+			inputVariable="UploadSongRequest">
 			<bpel:correlations>
 				<bpel:correlation set="UploadCorrelationSet"
-					initiate="no"></bpel:correlation>
+					initiate="yes"></bpel:correlation>
 			</bpel:correlations>
-		</bpel:receive>
+
+		</bpel:invoke>
+
 		<bpel:receive name="receiveUploadSongCallback"
 			partnerLink="UploadService" portType="us:UploadCallbackService"
 			operation="UploadSongCallback" variable="UploadSongResponse">
