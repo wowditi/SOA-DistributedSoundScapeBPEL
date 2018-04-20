@@ -7,7 +7,7 @@
      </xsl:copy>
  </xsl:template>
 
- <xsl:template match="conversationId/text()">
+ <xsl:template match="*/text()">
   <xsl:value-of select="generate-id()"/>
  </xsl:template>
 </xsl:stylesheet>

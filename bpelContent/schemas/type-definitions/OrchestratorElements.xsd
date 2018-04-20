@@ -2,50 +2,42 @@
 <schema targetNamespace="http://www.example.org/OrchestratorElements/"
 	xmlns="http://www.w3.org/2001/XMLSchema"
 	xmlns:tns="http://www.example.org/OrchestratorElements/"
-	xmlns:types="http://www.example.org/SoundScapeDataTypes/" xmlns:pref="http://www.example.org/RegistrationServiceElements/">
+	xmlns:types="http://www.example.org/SoundScapeDataTypes/"
+	xmlns:pref="http://www.example.org/RegistrationServiceElements/" xmlns:pref1="http://www.example.org/ControlServiceElements/">
 	<import schemaLocation="SoundScapeDataTypes.xsd"
 		namespace="http://www.example.org/SoundScapeDataTypes/">
 	</import>
 
-
-
-
-
-
-
-	<import schemaLocation="RegistrationServiceElements.xsd" namespace="http://www.example.org/RegistrationServiceElements/"></import>
-	<complexType name="DeleteSongRequest">
+	<import schemaLocation="RegistrationServiceElements.xsd"
+		namespace="http://www.example.org/RegistrationServiceElements/">
+	</import>
+	<import schemaLocation="ControlServiceElements.xsd" namespace="http://www.example.org/ControlServiceElements/"></import>
+	<complexType name="DeleteSongCall">
 		<sequence>
 			<element name="Link" type="types:Link"></element>
 			<element name="Speakers" type="types:SpeakerDeviceArray"></element>
+			<element name="conversationId" type="string"></element>
 		</sequence>
 	</complexType>
 
-	<complexType name="IsSongLoadedRequest">
+	<complexType name="IsSongLoadedCall">
 		<sequence>
 			<element name="Link" type="types:Link"></element>
 			<element name="Speakers" type="types:SpeakerDeviceArray"></element>
+			<element name="conversationId" type="string"></element>
 		</sequence>
 	</complexType>
 
-	<complexType name="UploadSongRequest">
+	<complexType name="UploadSongCall">
 		<sequence>
 			<element name="Link" type="types:Link"></element>
 			<element name="Speakers" type="types:SpeakerDeviceArray"></element>
+			<element name="conversationId" type="string"></element>
 		</sequence>
 	</complexType>
 
 
-	<complexType name="FunctionCall">
-		<choice>
-			<element name="ChangeSpeakerPosition" type="string"></element>
-			<element name="SendPlaybackCommand" type="string"></element>
-			<element name="UploadSong" type="types:Link"></element>
-			<element name="DeleteSong" type="types:Link"></element>
-		</choice>
-	</complexType>
 
-	<element name="FunctionRequest" type="tns:FunctionCall"></element>
 
 
 	<element name="ConfirmRegistrationMessage"
@@ -60,10 +52,77 @@
 	</complexType>
 
 
-	<complexType name="FunctionCallWithUser">
+
+	<element name="Stop" type="tns:conversationId"></element>
+
+	<simpleType name="conversationId">
+		<restriction base="string"></restriction>
+	</simpleType>
+
+	<element name="CallUploadSong" type="tns:UploadSongCall"></element>
+
+	<element name="CallDeleteSong" type="tns:DeleteSongCall"></element>
+
+
+
+	<element name="CallIsSongLoaded" type="tns:IsSongLoadedCall"></element>
+
+	<element name="CallAddSpeaker" type="tns:AddSpeakerCall"></element>
+
+	<complexType name="AddSpeakerCall">
 		<sequence>
-			<element name="FunctionCall" type="tns:FunctionCall"></element>
-			<element name="User" type="types:GeneralDevice"></element>
+			<element name="AddSpeakerRequest"
+				type="pref:AddSpeakerRequest">
+			</element>
+			<element name="conversationId" type="string"></element>
+		</sequence>
+	</complexType>
+
+	<element name="CallRemoveSpeaker" type="tns:CallRemoveSpeaker"></element>
+
+	<element name="CallMoveSpeaker" type="tns:CallMoveSpeaker"></element>
+
+	<element name="CallSetSoundScapeSourceLayout"
+		type="tns:CallSetSoundScapeSourceLayout">
+	</element>
+
+	<element name="CallPlaybackCommand"
+		type="tns:CallPlaybackCommand">
+	</element>
+
+	<complexType name="CallMoveSpeaker">
+		<sequence>
+			<element name="setSpeakerLocationRequest"
+				type="pref:SetSpeakerLocationRequest">
+			</element>
+			<element name="conversationId" type="string"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="CallPlaybackCommand">
+		<sequence>
+			<element name="playbackCommand"
+				type="pref1:ProcessPlaybackCommandRequest">
+			</element>
+			<element name="conversationId" type="string"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="CallRemoveSpeaker">
+		<sequence>
+			<element name="removeSpeakerRequest"
+				type="pref:RemoveSpeakerRequest">
+			</element>
+			<element name="conversationId" type="string"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="CallSetSoundScapeSourceLayout">
+		<sequence>
+			<element name="setSoundScapeSourceLayoutRequest"
+				type="pref1:SetSoundScapeSourceLayoutRequest">
+			</element>
+			<element name="conversationId" type="string"></element>
 		</sequence>
 	</complexType>
 </schema>
