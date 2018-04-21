@@ -20,7 +20,7 @@
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
 	<!-- Import the client WSDL -->
-	<bpel:import
+    <bpel:import
 		namespace="http://www.example.org/SoundScapeDataTypes/"
 		location="schemas/type-definitions/SoundScapeDataTypes.xsd"
 		importType="http://www.w3.org/2001/XMLSchema"></bpel:import>
@@ -41,7 +41,7 @@
 
 	<bpel:import location="UploadService.wsdl"
 		namespace="http://www.example.org/UploadService/"
-		importType="http://schemas.xmlsoap.org/wsdl/" />
+		importType="http://schemas.xmlsoap.org/wsdl/" />  
 	<bpel:import location="ControlService.wsdl"
 		namespace="http://www.example.org/ControlService/"
 		importType="http://schemas.xmlsoap.org/wsdl/" />
@@ -143,11 +143,11 @@
 			messageType="rs:GetSpeakersResponse"></bpel:variable>
 		<bpel:variable name="GetSpeakersRequest"
 			messageType="rs:GetSpeakersRequest"></bpel:variable>
-		<bpel:variable name="DeleteSongRequest"
+		<bpel:variable name="DeleteSongCall"
 			messageType="tns:DeleteSongRequest"></bpel:variable>
 		<bpel:variable name="UploadServiceRequest"
 			messageType="us:DeleteSongResponse"></bpel:variable>
-		<bpel:variable name="DeleteSongRequest2"
+		<bpel:variable name="DeleteSongRequest"
 			messageType="us:DeleteSongRequest"></bpel:variable>
 		<bpel:variable name="SetSoundScapeSourceLayoutRequestCall"
 			messageType="tns:SetSoundScapeSourceLayoutRequest"></bpel:variable>
@@ -316,8 +316,8 @@
   <Link>
     <Type>ftp</Type>
     <Address>Address</Address>
-  </Link>
-  <Speakers>
+  </Link> 
+  <Speakers> 
     <SpeakerDevice>
       <GeneralDevice>
         <IpAddress>IpAddress</IpAddress>
@@ -400,12 +400,14 @@
                 
                 <bpel:onMessage partnerLink="client"
 					operation="DeleteSongFunction" portType="tns:DistributedSoundScape"
-					variable="DeleteSongRequest">
+					variable="DeleteSongCall">
 					<bpel:sequence>
                         <bpel:invoke name="GetSpeakers" partnerLink="RegistrationService" operation="GetSpeakers" portType="rs:RegistrationService" inputVariable="GetSpeakersRequest" outputVariable="GetSpeakersResponse"></bpel:invoke>
                         <bpel:assign validate="no" name="Assign">
+                            
+                            
                             <bpel:copy>
-                                <bpel:from><bpel:literal><tns:CallDeleteSong xmlns:tns="http://www.example.org/OrchestratorElements/" xmlns:tns1="http://www.example.org/SoundScapeDataTypes/" xmlns:tns2="http://www.example.org/RegistrationServiceElements/" xmlns:tns3="http://www.example.org/ControlServiceElements/" xmlns:tns4="http://www.example.org/UploadServiceElements/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                                <bpel:from><bpel:literal><tns:DeleteSongRequest xmlns:tns="http://www.example.org/UploadServiceElements/" xmlns:tns1="http://www.example.org/SoundScapeDataTypes/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Link>
     <Type>ftp</Type>
     <Address>Address</Address>
@@ -425,15 +427,15 @@
     </SpeakerDevice>
   </Speakers>
   <conversationId>conversationId</conversationId>
-</tns:CallDeleteSong>
+</tns:DeleteSongRequest>
 </bpel:literal></bpel:from>
-                                <bpel:to variable="DeleteSongRequest" part="DeleteSongRequest"></bpel:to>
+                                <bpel:to variable="DeleteSongRequest" part="Request"></bpel:to>
                             </bpel:copy>
                             
                             <bpel:copy>
 								<bpel:from variable="uploadServiceConversationId">
                                 </bpel:from>
-								<bpel:to part="DeleteSongRequest" variable="DeleteSongRequest">
+								<bpel:to part="Request" variable="DeleteSongRequest">
                                     <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
                                         <![CDATA[conversationId]]>
                                     </bpel:query>
@@ -443,32 +445,40 @@
 								<bpel:from part="GetSpeakersResponse" variable="GetSpeakersResponse">
                                     <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[Speakers]]></bpel:query>
                                 </bpel:from>
-								<bpel:to part="DeleteSongRequest" variable="DeleteSongRequest">
+								<bpel:to part="Request" variable="DeleteSongRequest">
                                     <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
                                         <![CDATA[Speakers]]>
                                     </bpel:query>
                                 </bpel:to>
 							</bpel:copy>
                             <bpel:copy>
-                                <bpel:from part="DeleteSongRequest" variable="DeleteSongRequest">
+                                <bpel:from part="DeleteSongRequest" variable="DeleteSongCall">
                                     <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[Link]]></bpel:query>
                                 </bpel:from>
-                                <bpel:to part="DeleteSongRequest" variable="DeleteSongRequest">
-                                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[Link]]></bpel:query>
+                                <bpel:to part="Request" variable="DeleteSongRequest">
+                                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                        <![CDATA[Link]]>
+                                    </bpel:query>
                                 </bpel:to>
                             </bpel:copy>
                         </bpel:assign>
 						<bpel:invoke name="DeleteSong"
 							partnerLink="UploadService" portType="us:UploadService"
-							operation="DeleteSong" inputVariable="DeleteSongRequest2">
-						</bpel:invoke>
+							operation="DeleteSong" inputVariable="DeleteSongRequest">
+                            <bpel:correlations>
+                                <bpel:correlation set="ClientCorrelationSet" initiate="no"></bpel:correlation>
+                            </bpel:correlations>
+                        </bpel:invoke>
 						<bpel:invoke name="RequestFunction"
 							partnerLink="client" operation="requestFunction"
 							portType="tns:DistributedSoundScapeCallback"
 							inputVariable="clientRequest">
 						</bpel:invoke>
 					</bpel:sequence>
-				</bpel:onMessage>
+                    <bpel:correlations>
+                        <bpel:correlation set="ClientCorrelationSet" initiate="no"></bpel:correlation>
+                    </bpel:correlations>
+                </bpel:onMessage>
 
 				<bpel:onMessage partnerLink="UploadService"
 					portType="us:UploadCallbackService" operation="DeleteSongCallback"
@@ -611,10 +621,14 @@
                             </bpel:copy>
                             <bpel:copy>
                                 <bpel:from part="SetSoundScapeSourceLayoutRequest" variable="SetSoundScapeSourceLayoutRequestCall">
-                                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[setSoundScapeSourceLayoutRequest/SoundScapeSourceLayout]]></bpel:query>
+                                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                        <![CDATA[setSoundScapeSourceLayoutRequest]]>
+                                    </bpel:query>
                                 </bpel:from>
                                 <bpel:to part="SetSoundScapeSourceLayoutRequest" variable="SetSoundScapeSourceLayoutRequest">
-                                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[SoundScapeSourceLayout]]></bpel:query>
+                                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                        <![CDATA[SoundScapeSourceLayout]]>
+                                    </bpel:query>
                                 </bpel:to>
                             </bpel:copy>
                         </bpel:assign>

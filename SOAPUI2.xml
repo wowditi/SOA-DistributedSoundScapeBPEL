@@ -4329,13 +4329,13 @@
     <con:testCase id="200ffabc-d7fe-4953-ae5c-dd59b63fa0d6" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UploadSong" searchProperties="true" timeout="0">
       <con:settings/>
       <con:savedRecentRuns>1</con:savedRecentRuns>
-      <con:testStep type="properties" name="" id="37055c9d-8f0b-4ce6-93c1-b8e4f2bab005">
+      <con:testStep type="properties" name="properties" id="37055c9d-8f0b-4ce6-93c1-b8e4f2bab005">
         <con:settings/>
         <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:properties>
             <con:property>
               <con:name>conversationId</con:name>
-              <con:value>0</con:value>
+              <con:value>w6aaa</con:value>
             </con:property>
           </con:properties>
         </con:config>
@@ -4387,21 +4387,78 @@
           </con:response>
         </con:config>
       </con:testStep>
-      <con:testStep type="transfer" name="PropertyTransfer 1" id="45f2d987-14aa-4c8a-a3b1-53a05c5f7ee3">
+      <con:testStep type="transfer" name="PropertyTransfer 1" id="f75e2dfd-e96c-4af1-83b1-d1ef12aa96da">
         <con:settings/>
         <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-          <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" transferToAll="true">
+          <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="true" entitize="false" transferChildNodes="false">
             <con:name>functionRequest</con:name>
-            <con:sourceType>Response</con:sourceType>
+            <con:sourceType>Request</con:sourceType>
             <con:sourceStep>functionRequest1</con:sourceStep>
             <con:sourcePath>declare namespace ns1='http://www.example.org/OrchestratorElements/';
 //ns1:functionRequest[1]</con:sourcePath>
             <con:targetType>conversationId</con:targetType>
-            <con:targetStep/>
+            <con:targetStep>properties</con:targetStep>
             <con:targetPath/>
             <con:type>XPATH</con:type>
             <con:upgraded>true</con:upgraded>
           </con:transfers>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="request" name="AddSpeaker" id="dfef7308-a837-4b29-9c12-8ebb5f479974" disabled="true">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeBinding</con:interface>
+          <con:operation>AddSpeakerFunction</con:operation>
+          <con:request name="AddSpeaker" id="cae32dde-26c4-484d-91e3-29e68067d137">
+            <con:settings>
+              <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+            </con:settings>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://www.example.org/OrchestratorElements/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <orc:CallAddSpeaker>
+         <AddSpeakerRequest>
+            <Speaker>
+               <GeneralDevice>
+                  <IpAddress>255.1.3.63</IpAddress>
+                  <Port>660</Port>
+                  <SoundScapeId>2</SoundScapeId>
+               </GeneralDevice>
+               <Location>
+                  <x>254</x>
+                  <y>52</y>
+                  <z>9</z>
+               </Location>
+            </Speaker>
+         </AddSpeakerRequest>
+         <conversationId>${properties#conversationId}</conversationId>
+      </orc:CallAddSpeaker>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:credentials>
+              <con:selectedAuthProfile>Inherit From Parent</con:selectedAuthProfile>
+              <con:authType>No Authorization</con:authType>
+            </con:credentials>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="mockresponse" name="Copy of functionRequest1" id="93d0ea7e-dafe-4e2d-a23d-3fe325d81960" disabled="true">
+        <con:settings/>
+        <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>requestFunction</con:operation>
+          <con:path>/onResult</con:path>
+          <con:port>8182</con:port>
+          <con:response id="91705251-f0bf-41b9-a262-e31ffc0577e0">
+            <con:settings/>
+            <con:responseContent xsi:nil="true"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+          </con:response>
         </con:config>
       </con:testStep>
       <con:testStep type="request" name="callUploadSong" id="ae9a35f3-edb6-4eb5-8111-7bc1afb1f3c1">
@@ -4424,7 +4481,7 @@
             <Address>fds</Address>
          </Link>
          <Speakers/>
-         <conversationId>w18aaa</conversationId>
+         <conversationId>${properties#conversationId}</conversationId>
       </orc:CallUploadSong>
    </soapenv:Body>
 </soapenv:Envelope>]]></con:request>
@@ -4436,20 +4493,6 @@
             <con:wsaConfig mustUnderstand="NONE" version="200508"/>
             <con:wsrmConfig version="1.2"/>
           </con:request>
-        </con:config>
-      </con:testStep>
-      <con:testStep type="mockresponse" name="receiveUploadSongCallback" id="1da4f6d8-f23f-4cca-8e0e-147cf6e44af3">
-        <con:settings/>
-        <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
-          <con:operation>uploadSongCallbackFunction</con:operation>
-          <con:path>/onResult</con:path>
-          <con:port>8182</con:port>
-          <con:response id="e3fe87dd-2030-4d8e-843a-859f3f1423a5">
-            <con:settings/>
-            <con:responseContent xsi:nil="true"/>
-            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
-          </con:response>
         </con:config>
       </con:testStep>
       <con:testStep type="mockresponse" name="functionRequest2" id="27c8b6e8-7dc8-4265-8bd9-70452755ee28">
@@ -4466,23 +4509,80 @@
           </con:response>
         </con:config>
       </con:testStep>
-      <con:testStep type="transfer" name="PropertyTransfer 2" id="ee69974b-7436-4ad1-8a3b-baaf8c66fa82">
+      <con:testStep type="request" name="Copy of callUploadSong" id="50cda35d-cde2-4f61-9ab6-84df4869a36e" disabled="true">
         <con:settings/>
-        <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-          <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="true" entitize="false" transferChildNodes="false">
-            <con:name>functionRequest</con:name>
-            <con:sourceType>Request</con:sourceType>
-            <con:sourceStep>functionRequest1</con:sourceStep>
-            <con:sourcePath>declare namespace ns1='http://www.example.org/OrchestratorElements/';
-//ns1:functionRequest[1]</con:sourcePath>
-            <con:targetType>Request</con:targetType>
-            <con:targetStep>callUploadSong</con:targetStep>
-            <con:targetPath>declare namespace orc='http://www.example.org/OrchestratorElements/';
-//orc:CallUploadSong[1]/conversationId[1]</con:targetPath>
-            <con:type>XPATH</con:type>
-            <con:targetTransferType>XPATH</con:targetTransferType>
-            <con:upgraded>true</con:upgraded>
-          </con:transfers>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeBinding</con:interface>
+          <con:operation>UploadSongFunction</con:operation>
+          <con:request name="Copy of callUploadSong" id="331ccd6a-b6f3-468a-a2dc-0b3176435524">
+            <con:settings>
+              <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+            </con:settings>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://www.example.org/OrchestratorElements/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <orc:CallUploadSong>
+         <Link>
+            <Type>http</Type>
+            <Address>fds2</Address>
+         </Link>
+         <Speakers/>
+         <conversationId>${properties#conversationId}</conversationId>
+      </orc:CallUploadSong>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:credentials>
+              <con:selectedAuthProfile>Inherit From Parent</con:selectedAuthProfile>
+              <con:authType>No Authorization</con:authType>
+            </con:credentials>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="mockresponse" name="Copy of functionRequest2" id="3dc10323-37ac-4513-abcb-5e668e266b5f" disabled="true">
+        <con:settings/>
+        <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>requestFunction</con:operation>
+          <con:path>/onResult</con:path>
+          <con:port>8182</con:port>
+          <con:response id="91705251-f0bf-41b9-a262-e31ffc0577e0">
+            <con:settings/>
+            <con:responseContent xsi:nil="true"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+          </con:response>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="mockresponse" name="receiveUploadSongCallback" id="1da4f6d8-f23f-4cca-8e0e-147cf6e44af3">
+        <con:settings/>
+        <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>uploadSongCallbackFunction</con:operation>
+          <con:path>/onResult</con:path>
+          <con:port>8182</con:port>
+          <con:response id="e3fe87dd-2030-4d8e-843a-859f3f1423a5">
+            <con:settings/>
+            <con:responseContent xsi:nil="true"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+          </con:response>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="mockresponse" name="Copy of receiveUploadSongCallback" id="da4ab12c-37d6-459a-b8c7-79833ba2c3d3" disabled="true">
+        <con:settings/>
+        <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>uploadSongCallbackFunction</con:operation>
+          <con:path>/onResult</con:path>
+          <con:port>8182</con:port>
+          <con:response id="e3fe87dd-2030-4d8e-843a-859f3f1423a5">
+            <con:settings/>
+            <con:responseContent xsi:nil="true"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+          </con:response>
         </con:config>
       </con:testStep>
       <con:testStep type="request" name="stop" id="55151cfb-aca6-4080-9774-2dde19c4ec91">
@@ -4499,10 +4599,9 @@
             <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://www.example.org/OrchestratorElements/">
    <soapenv:Header/>
    <soapenv:Body>
-      <orc:Stop>w8aaa</orc:Stop>
+      <orc:Stop>${properties#conversationId}</orc:Stop>
    </soapenv:Body>
 </soapenv:Envelope>]]></con:request>
-            <con:assertion type="SOAP Response" id="ee6eb9d5-623d-4304-bfed-8ecb9eccf5d8"/>
             <con:credentials>
               <con:selectedAuthProfile>Inherit From Parent</con:selectedAuthProfile>
               <con:authType>No Authorization</con:authType>
@@ -4535,7 +4634,226 @@
         <con:properties/>
       </con:breakPoints>
       <con:breakPoints>
-        <con:testStepId>ee69974b-7436-4ad1-8a3b-baaf8c66fa82</con:testStepId>
+        <con:testStepId>75c9d61f-216f-4a92-9647-b36921087bab</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>ae9a35f3-edb6-4eb5-8111-7bc1afb1f3c1</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>1da4f6d8-f23f-4cca-8e0e-147cf6e44af3</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>50cda35d-cde2-4f61-9ab6-84df4869a36e</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>3dc10323-37ac-4513-abcb-5e668e266b5f</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>da4ab12c-37d6-459a-b8c7-79833ba2c3d3</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>dfef7308-a837-4b29-9c12-8ebb5f479974</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>93d0ea7e-dafe-4e2d-a23d-3fe325d81960</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+    </con:testCase>
+    <con:testCase id="0d8c7da9-dc88-44db-acce-06f03f8b31e1" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="AddSpeaker" searchProperties="true" timeout="0">
+      <con:settings/>
+      <con:savedRecentRuns>1</con:savedRecentRuns>
+      <con:testStep type="properties" name="properties" id="78ee30e1-b03e-4d74-bbab-b29f370296a2">
+        <con:settings/>
+        <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:properties>
+            <con:property>
+              <con:name>conversationId</con:name>
+              <con:value>w4aaa</con:value>
+            </con:property>
+          </con:properties>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="request" name="RegisterUser" id="391fe0a7-7b32-4231-9cd1-baa5e176c5fe">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeBinding</con:interface>
+          <con:operation>RegisterUserFunction</con:operation>
+          <con:request name="RegisterUser" id="ab84a1a1-9aa9-4cc7-93d0-df45384c7d63">
+            <con:settings>
+              <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+            </con:settings>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:reg="http://www.example.org/RegistrationServiceElements/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <reg:RegisterUserRequest>
+         <User>
+            <IpAddress>0.0.0.0</IpAddress>
+            <Port>1</Port>
+            <SoundScapeId>1</SoundScapeId>
+         </User>
+      </reg:RegisterUserRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:credentials>
+              <con:selectedAuthProfile>Inherit From Parent</con:selectedAuthProfile>
+              <con:authType>No Authorization</con:authType>
+            </con:credentials>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="mockresponse" name="functionRequest1" id="37de7c3d-5007-4896-9318-68267c28a0b0">
+        <con:settings/>
+        <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>requestFunction</con:operation>
+          <con:path>/onResult</con:path>
+          <con:port>8182</con:port>
+          <con:response id="91705251-f0bf-41b9-a262-e31ffc0577e0">
+            <con:settings/>
+            <con:responseContent xsi:nil="true"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+          </con:response>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="transfer" name="PropertyTransfer 1" id="8d89cb1a-37f4-41ba-94d8-573cdd1972a9">
+        <con:settings/>
+        <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="true" entitize="false" transferChildNodes="false">
+            <con:name>functionRequest</con:name>
+            <con:sourceType>Request</con:sourceType>
+            <con:sourceStep>functionRequest1</con:sourceStep>
+            <con:sourcePath>declare namespace ns1='http://www.example.org/OrchestratorElements/';
+//ns1:functionRequest[1]</con:sourcePath>
+            <con:targetType>conversationId</con:targetType>
+            <con:targetStep>properties</con:targetStep>
+            <con:targetPath/>
+            <con:type>XPATH</con:type>
+            <con:upgraded>true</con:upgraded>
+          </con:transfers>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="request" name="AddSpeaker" id="16a5ee85-77a3-49b4-9a14-3ede74f7b8d1">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeBinding</con:interface>
+          <con:operation>AddSpeakerFunction</con:operation>
+          <con:request name="AddSpeaker" id="cae32dde-26c4-484d-91e3-29e68067d137">
+            <con:settings>
+              <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+            </con:settings>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://www.example.org/OrchestratorElements/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <orc:CallAddSpeaker>
+         <AddSpeakerRequest>
+            <Speaker>
+               <GeneralDevice>
+                  <IpAddress>255.1.3.63</IpAddress>
+                  <Port>663</Port>
+                  <SoundScapeId>1</SoundScapeId>
+               </GeneralDevice>
+               <Location>
+                  <x>254</x>
+                  <y>52</y>
+                  <z>9</z>
+               </Location>
+            </Speaker>
+         </AddSpeakerRequest>
+         <conversationId>${properties#conversationId}</conversationId>
+      </orc:CallAddSpeaker>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:credentials>
+              <con:selectedAuthProfile>Inherit From Parent</con:selectedAuthProfile>
+              <con:authType>No Authorization</con:authType>
+            </con:credentials>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="mockresponse" name="Copy of functionRequest1" id="bf65580f-9a11-48a0-bfd8-d0b12d4afcfa">
+        <con:settings/>
+        <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>requestFunction</con:operation>
+          <con:path>/onResult</con:path>
+          <con:port>8182</con:port>
+          <con:response id="91705251-f0bf-41b9-a262-e31ffc0577e0">
+            <con:settings/>
+            <con:responseContent xsi:nil="true"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+          </con:response>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="request" name="stop" id="08b130b6-34ac-4b23-8ae3-7913530ebbae">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeBinding</con:interface>
+          <con:operation>stopFunction</con:operation>
+          <con:request name="stop" id="df64cfd8-3b72-48e1-a4ed-f354bc486d8d">
+            <con:settings>
+              <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+            </con:settings>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://www.example.org/OrchestratorElements/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <orc:Stop>${properties#conversationId}</orc:Stop>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:credentials>
+              <con:selectedAuthProfile>Inherit From Parent</con:selectedAuthProfile>
+              <con:authType>No Authorization</con:authType>
+            </con:credentials>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:properties>
+        <con:property>
+          <con:name>clientId</con:name>
+        </con:property>
+      </con:properties>
+      <con:reportParameters/>
+      <con:breakPoints>
+        <con:testStepId>27c8b6e8-7dc8-4265-8bd9-70452755ee28</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>55151cfb-aca6-4080-9774-2dde19c4ec91</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>220bcabe-f9c7-4e15-9451-02d699d8f835</con:testStepId>
         <con:status>NONE</con:status>
         <con:properties/>
       </con:breakPoints>
@@ -4551,6 +4869,31 @@
       </con:breakPoints>
       <con:breakPoints>
         <con:testStepId>1da4f6d8-f23f-4cca-8e0e-147cf6e44af3</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>50cda35d-cde2-4f61-9ab6-84df4869a36e</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>3dc10323-37ac-4513-abcb-5e668e266b5f</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>da4ab12c-37d6-459a-b8c7-79833ba2c3d3</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>dfef7308-a837-4b29-9c12-8ebb5f479974</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>93d0ea7e-dafe-4e2d-a23d-3fe325d81960</con:testStepId>
         <con:status>NONE</con:status>
         <con:properties/>
       </con:breakPoints>

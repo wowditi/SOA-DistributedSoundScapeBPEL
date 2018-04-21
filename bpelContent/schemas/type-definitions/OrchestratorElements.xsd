@@ -18,24 +18,21 @@
 	<import schemaLocation="UploadServiceElements.xsd" namespace="http://www.example.org/UploadServiceElements/"></import>
 	<complexType name="DeleteSongCall">
 		<sequence>
-			<element name="Link" type="types:Link"></element>
-			<element name="Speakers" type="types:SpeakerDeviceArray"></element>
+			<element name="Link" type="types:Link"></element>
 			<element name="conversationId" type="string"></element>
 		</sequence>
 	</complexType>
 
 	<complexType name="IsSongLoadedCall">
 		<sequence>
-			<element name="Link" type="types:Link"></element>
-			<element name="Speakers" type="types:SpeakerDeviceArray"></element>
+			<element name="Link" type="types:Link"></element>
 			<element name="conversationId" type="string"></element>
 		</sequence>
 	</complexType>
 
 	<complexType name="UploadSongCall">
 		<sequence>
-			<element name="Link" type="types:Link"></element>
-			<element name="Speakers" type="types:SpeakerDeviceArray"></element>
+			<element name="Link" type="types:Link"></element>
 			<element name="conversationId" type="string"></element>
 		</sequence>
 	</complexType>
@@ -106,7 +103,7 @@
 	<complexType name="CallPlaybackCommand">
 		<sequence>
 			<element name="playbackCommand"
-				type="pref1:ProcessPlaybackCommandRequest">
+				type="types:PlaybackCommand">
 			</element>
 			<element name="conversationId" type="string"></element>
 		</sequence>
@@ -124,7 +121,7 @@
 	<complexType name="CallSetSoundScapeSourceLayout">
 		<sequence>
 			<element name="setSoundScapeSourceLayoutRequest"
-				type="pref1:SetSoundScapeSourceLayoutRequest">
+				type="types:SoundScapeSourceLayout">
 			</element>
 			<element name="conversationId" type="string"></element>
 		</sequence>

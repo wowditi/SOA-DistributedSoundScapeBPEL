@@ -21,13 +21,13 @@
     <vprop:propertyAlias messageType="tns:AddSpeakerRequest" part="AddSpeakerRequest" propertyName="tns:conversationId">
     <vprop:query><![CDATA[/conversationId]]></vprop:query>
   </vprop:propertyAlias>
+    <vprop:propertyAlias messageType="wsdl:DeleteSongRequest" part="Request" propertyName="tns:conversationId">
+    <vprop:query><![CDATA[/conversationId]]></vprop:query>
+  </vprop:propertyAlias>
     <vprop:propertyAlias messageType="tns:DeleteSongRequest" part="DeleteSongRequest" propertyName="tns:conversationId">
     <vprop:query><![CDATA[/conversationId]]></vprop:query>
   </vprop:propertyAlias>
     <vprop:propertyAlias messageType="wsdl:DeleteSongResponse" part="Response" propertyName="tns:conversationId">
-    <vprop:query><![CDATA[/conversationId]]></vprop:query>
-  </vprop:propertyAlias>
-    <vprop:propertyAlias messageType="tns:DeleteSongRequest" part="DeleteSongRequest" propertyName="tns:conversationId">
     <vprop:query><![CDATA[/conversationId]]></vprop:query>
   </vprop:propertyAlias>
     <import location="UploadService.wsdl" namespace="http://www.example.org/UploadService/"/>
