@@ -1,60 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
-	xmlns:cs="http://www.example.org/ControlServiceElements/"
-	xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype"
-	xmlns:rs="http://www.example.org/RegistrationServiceElements/"
-	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
-	xmlns:ssdt="http://www.example.org/SoundScapeDataTypes/"
-	xmlns:tns="DistributedSoundScape"
-	xmlns:types="http://www.example.org/OrchestratorElements/"
-	xmlns:us="http://www.example.org/UploadServiceElements/"
-	xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop"
-	xmlns:wsdl="http://www.example.org/UploadService/"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	name="DistributedSoundScape" targetNamespace="DistributedSoundScape">
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:cs="http://www.example.org/ControlServiceElements/" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:rs="http://www.example.org/RegistrationServiceElements/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ssdt="http://www.example.org/SoundScapeDataTypes/" xmlns:tns="DistributedSoundScape" xmlns:types="http://www.example.org/OrchestratorElements/" xmlns:us="http://www.example.org/UploadServiceElements/" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" xmlns:wsdl="http://www.example.org/UploadService/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="DistributedSoundScape" targetNamespace="DistributedSoundScape">
 
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 		TYPE DEFINITION - List of types participating in this BPEL process The BPEL 
 		Designer will generate default request and response types but you can define 
 		or import any XML Schema type and use them as part of the message types. 
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-	<vprop:property name="conversationId" type="xsd:string" />
-	<vprop:propertyAlias
-		messageType="wsdl:UploadSongRequest" part="Request"
-		propertyName="tns:conversationId">
+	<vprop:property name="conversationId" type="xsd:string"/>
+	<vprop:propertyAlias messageType="wsdl:UploadSongRequest" part="Request" propertyName="tns:conversationId">
 		<vprop:query><![CDATA[/conversationId]]></vprop:query>
 	</vprop:propertyAlias>
-	<vprop:propertyAlias
-		messageType="wsdl:UploadSongResponse" part="Response"
-		propertyName="tns:conversationId">
+	<vprop:propertyAlias messageType="wsdl:UploadSongResponse" part="Response" propertyName="tns:conversationId">
 		<vprop:query><![CDATA[/conversationId]]></vprop:query>
 	</vprop:propertyAlias>
-	<import location="UploadService.wsdl"
-		namespace="http://www.example.org/UploadService/" />
-	<types>
-		<schema xmlns="http://www.w3.org/2001/XMLSchema"
-			attributeFormDefault="unqualified" elementFormDefault="qualified"
-			targetNamespace="DistributedSoundScape">
+    <vprop:propertyAlias messageType="tns:functionRequest" part="functionRequest" propertyName="tns:conversationId"/>
+    <vprop:propertyAlias messageType="tns:UploadSongRequest" part="UploadSongRequest" propertyName="tns:conversationId">
+    <vprop:query><![CDATA[/conversationId]]></vprop:query>
+  </vprop:propertyAlias>
+    <vprop:propertyAlias messageType="tns:stopRequest" part="stopRequest" propertyName="tns:conversationId"/>
+    <import location="UploadService.wsdl" namespace="http://www.example.org/UploadService/"/>
+    <types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="DistributedSoundScape">
 
-			<import
-				namespace="http://www.example.org/RegistrationServiceElements/"
-				schemaLocation="schemas/type-definitions/RegistrationServiceElements.xsd" />
+			<import namespace="http://www.example.org/RegistrationServiceElements/" schemaLocation="schemas/type-definitions/RegistrationServiceElements.xsd"/>
 
-			<import
-				namespace="http://www.example.org/ControlServiceElements/"
-				schemaLocation="schemas/type-definitions/ControlServiceElements.xsd" />
+			<import namespace="http://www.example.org/ControlServiceElements/" schemaLocation="schemas/type-definitions/ControlServiceElements.xsd"/>
 
-			<import
-				namespace="http://www.example.org/UploadServiceElements/"
-				schemaLocation="schemas/type-definitions/UploadServiceElements.xsd" />
+			<import namespace="http://www.example.org/UploadServiceElements/" schemaLocation="schemas/type-definitions/UploadServiceElements.xsd"/>
 
-			<import
-				namespace="http://www.example.org/OrchestratorElements/"
-				schemaLocation="schemas/type-definitions/OrchestratorElements.xsd" />
+			<import namespace="http://www.example.org/OrchestratorElements/" schemaLocation="schemas/type-definitions/OrchestratorElements.xsd"/>
 
-			<import
-				namespace="http://www.example.org/SoundScapeDataTypes/"
-				schemaLocation="schemas/type-definitions/SoundScapeDataTypes.xsd" />
+			<import namespace="http://www.example.org/SoundScapeDataTypes/" schemaLocation="schemas/type-definitions/SoundScapeDataTypes.xsd"/>
 		</schema>
 	</types>
 
@@ -63,41 +39,37 @@
 		MESSAGE TYPE DEFINITION - Definition of the message types used as part of 
 		the port type defintions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 	<message name="RegisterUserRequest">
-		<part element="rs:RegisterUserRequest" name="RegisterUserRequest" />
+		<part element="rs:RegisterUserRequest" name="RegisterUserRequest"/>
 	</message>
 	<message name="UploadSongRequest">
-		<part element="types:CallUploadSong" name="UploadSongRequest" />
+		<part element="types:CallUploadSong" name="UploadSongRequest"/>
 	</message>
 	<message name="DeleteSongRequest">
-		<part element="types:CallDeleteSong" name="DeleteSongRequest" />
+		<part element="types:CallDeleteSong" name="DeleteSongRequest"/>
 	</message>
 	<message name="IsSongLoadedRequest">
-		<part element="types:CallIsSongLoaded" name="IsSongLoadedRequest" />
+		<part element="types:CallIsSongLoaded" name="IsSongLoadedRequest"/>
 	</message>
 	<message name="AddSpeakerRequest">
-		<part element="types:CallAddSpeaker" name="AddSpeakerRequest" />
+		<part element="types:CallAddSpeaker" name="AddSpeakerRequest"/>
 	</message>
 	<message name="RemoveSpeakerRequest">
-		<part element="types:CallRemoveSpeaker"
-			name="RemoveSpeakerRequest" />
+		<part element="types:CallRemoveSpeaker" name="RemoveSpeakerRequest"/>
 	</message>
 	<message name="ProcessPlaybackCommandRequest">
-		<part element="types:CallPlaybackCommand"
-			name="ProcessPlaybackCommandRequest" />
+		<part element="types:CallPlaybackCommand" name="ProcessPlaybackCommandRequest"/>
 	</message>
 	<message name="SetSoundScapeSourceLayoutRequest">
-		<part element="types:CallSetSoundScapeSourceLayout"
-			name="SetSoundScapeSourceLayoutRequest" />
+		<part element="types:CallSetSoundScapeSourceLayout" name="SetSoundScapeSourceLayoutRequest"/>
 	</message>
 	<message name="stopRequest">
-		<part element="types:Stop" name="stopRequest" />
+		<part element="types:Stop" name="stopRequest"/>
 	</message>
 	<message name="functionRequest">
-		<part element="types:functionRequest" name="functionRequest" />
+		<part element="types:functionRequest" name="functionRequest"/>
 	</message>
 	<message name="finishMessage">
-		<part element="rs:RegisterUserResponse"
-			name="RegisterUserResponse" />
+		<part element="rs:RegisterUserResponse" name="RegisterUserResponse"/>
 	</message>
 
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
@@ -107,140 +79,123 @@
 	<!-- portType implemented by the DistributedSoundScape BPEL process -->
 	<portType name="DistributedSoundScape">
 		<operation name="RegisterUserFunction">
-			<input message="tns:RegisterUserRequest" />
+			<input message="tns:RegisterUserRequest"/>
 		</operation>
 		<operation name="UploadSongFunction">
-			<input message="tns:UploadSongRequest" />
+			<input message="tns:UploadSongRequest"/>
 		</operation>
 		<operation name="DeleteSongFunction">
-			<input message="tns:DeleteSongRequest" />
+			<input message="tns:DeleteSongRequest"/>
 		</operation>
 		<operation name="IsSongLoadedFunction">
-			<input message="tns:IsSongLoadedRequest" />
+			<input message="tns:IsSongLoadedRequest"/>
 		</operation>
 		<operation name="AddSpeakerFunction">
-			<input message="tns:AddSpeakerRequest" />
+			<input message="tns:AddSpeakerRequest"/>
 		</operation>
 		<operation name="RemoveSpeakerFunction">
-			<input message="tns:RemoveSpeakerRequest" />
+			<input message="tns:RemoveSpeakerRequest"/>
 		</operation>
 		<operation name="ProcessPlaybackCommandFunction">
-			<input message="tns:ProcessPlaybackCommandRequest" />
+			<input message="tns:ProcessPlaybackCommandRequest"/>
 		</operation>
 		<operation name="SetSoundScapeSourceLayoutFunction">
-			<input message="tns:SetSoundScapeSourceLayoutRequest" />
+			<input message="tns:SetSoundScapeSourceLayoutRequest"/>
 		</operation>
 		<operation name="stopFunction">
-			<input message="tns:stopRequest" />
+			<input message="tns:stopRequest"/>
 		</operation>
 		<operation name="finishFunction">
-			<input message="tns:finishMessage" />
+			<input message="tns:finishMessage"/>
 		</operation>
 	</portType>
 
 	<portType name="DistributedSoundScapeCallback">
 		<operation name="requestFunction">
-			<input message="tns:functionRequest" />
+			<input message="tns:functionRequest"/>
 		</operation>
 	</portType>
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 		PARTNER LINK TYPE DEFINITION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 	<plnk:partnerLinkType name="DistributedSoundScape">
-		<plnk:role name="DistributedSoundScapeProvider"
-			portType="tns:DistributedSoundScape" />
-		<plnk:role name="DistributedSoundScapeRequester"
-			portType="tns:DistributedSoundScapeCallback" />
+		<plnk:role name="DistributedSoundScapeProvider" portType="tns:DistributedSoundScape"/>
+		<plnk:role name="DistributedSoundScapeRequester" portType="tns:DistributedSoundScapeCallback"/>
 	</plnk:partnerLinkType>
 
 
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 		BINDING DEFINITION - Defines the message format and protocol details for 
 		a web service. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-	<binding name="DistributedSoundScapeBinding"
-		type="tns:DistributedSoundScape">
-		<soap:binding style="document"
-			transport="http://schemas.xmlsoap.org/soap/http" />
+	<binding name="DistributedSoundScapeBinding" type="tns:DistributedSoundScape">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 		<operation name="RegisterUserFunction">
-			<soap:operation
-				soapAction="DistributedSoundScape/RegisterUserFunction" />
+			<soap:operation soapAction="DistributedSoundScape/RegisterUserFunction"/>
 			<input>
-				<soap:body use="literal" />
+				<soap:body use="literal"/>
 			</input>
 		</operation>
 		<operation name="UploadSongFunction">
-			<soap:operation
-				soapAction="DistributedSoundScape/UploadSongFunction" />
+			<soap:operation soapAction="DistributedSoundScape/UploadSongFunction"/>
 			<input>
-				<soap:body use="literal" />
+				<soap:body use="literal"/>
 			</input>
 		</operation>
 		<operation name="DeleteSongFunction">
-			<soap:operation
-				soapAction="DistributedSoundScape/DeleteSongFunction" />
+			<soap:operation soapAction="DistributedSoundScape/DeleteSongFunction"/>
 			<input>
-				<soap:body use="literal" />
+				<soap:body use="literal"/>
 			</input>
 		</operation>
 		<operation name="IsSongLoadedFunction">
-			<soap:operation
-				soapAction="DistributedSoundScape/IsSongLoadedFunction" />
+			<soap:operation soapAction="DistributedSoundScape/IsSongLoadedFunction"/>
 			<input>
-				<soap:body use="literal" />
+				<soap:body use="literal"/>
 			</input>
 		</operation>
 		<operation name="AddSpeakerFunction">
-			<soap:operation
-				soapAction="DistributedSoundScape/AddSpeakerFunction" />
+			<soap:operation soapAction="DistributedSoundScape/AddSpeakerFunction"/>
 			<input>
-				<soap:body use="literal" />
+				<soap:body use="literal"/>
 			</input>
 		</operation>
 		<operation name="RemoveSpeakerFunction">
-			<soap:operation
-				soapAction="DistributedSoundScape/RemoveSpeakerFunction" />
+			<soap:operation soapAction="DistributedSoundScape/RemoveSpeakerFunction"/>
 			<input>
-				<soap:body use="literal" />
+				<soap:body use="literal"/>
 			</input>
 		</operation>
 		<operation name="ProcessPlaybackCommandFunction">
-			<soap:operation
-				soapAction="DistributedSoundScape/ProcessPlaybackCommandFunction" />
+			<soap:operation soapAction="DistributedSoundScape/ProcessPlaybackCommandFunction"/>
 			<input>
-				<soap:body use="literal" />
+				<soap:body use="literal"/>
 			</input>
 		</operation>
 		<operation name="SetSoundScapeSourceLayoutFunction">
-			<soap:operation
-				soapAction="DistributedSoundScape/SetSoundScapeSourceLayoutFunction" />
+			<soap:operation soapAction="DistributedSoundScape/SetSoundScapeSourceLayoutFunction"/>
 			<input>
-				<soap:body use="literal" />
+				<soap:body use="literal"/>
 			</input>
 		</operation>
 		<operation name="stopFunction">
-			<soap:operation
-				soapAction="DistributedSoundScape/stopFunction" />
+			<soap:operation soapAction="DistributedSoundScape/stopFunction"/>
 			<input>
-				<soap:body use="literal" />
+				<soap:body use="literal"/>
 			</input>
 		</operation>
 		<operation name="finishFunction">
-			<soap:operation
-				soapAction="DistributedSoundScape/finishFunction" />
+			<soap:operation soapAction="DistributedSoundScape/finishFunction"/>
 			<input>
-				<soap:body use="literal" />
+				<soap:body use="literal"/>
 			</input>
 		</operation>
 	</binding>
 
-	<binding name="DistributedSoundScapeCallbackBinding"
-		type="tns:DistributedSoundScapeCallback">
-		<soap:binding style="document"
-			transport="http://schemas.xmlsoap.org/soap/http" />
+	<binding name="DistributedSoundScapeCallbackBinding" type="tns:DistributedSoundScapeCallback">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 		<operation name="requestFunction">
-			<soap:operation
-				soapAction="DistributedSoundScape/requestFunction" />
+			<soap:operation soapAction="DistributedSoundScape/requestFunction"/>
 			<input>
-				<soap:body use="literal" />
+				<soap:body use="literal"/>
 			</input>
 		</operation>
 	</binding>
@@ -249,17 +204,14 @@
 		SERVICE DEFINITION - A service groups a set of ports into a service unit. 
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 	<service name="DistributedSoundScapeServiceCallback">
-		<port binding="tns:DistributedSoundScapeCallbackBinding"
-			name="DistributedSoundScapePortCallbackPort">
-			<soap:address location="http://localhost:8181/onResult" />
+		<port binding="tns:DistributedSoundScapeCallbackBinding" name="DistributedSoundScapePortCallbackPort">
+			<soap:address location="http://localhost:8182/onResult"/>
 		</port>
 	</service>
 
 	<service name="DistributedSoundScapeService">
-		<port binding="tns:DistributedSoundScapeBinding"
-			name="DistributedSoundScapePort">
-			<soap:address
-				location="http://localhost:8080/ode/processes/DistributedSoundScape" />
+		<port binding="tns:DistributedSoundScapeBinding" name="DistributedSoundScapePort">
+			<soap:address location="http://localhost:8080/ode/processes/DistributedSoundScape"/>
 		</port>
 	</service>
 </definitions>
