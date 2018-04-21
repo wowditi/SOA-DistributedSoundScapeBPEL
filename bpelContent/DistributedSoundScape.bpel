@@ -555,6 +555,9 @@
 							</bpel:correlations>
 						</bpel:invoke>
                     </bpel:sequence>
+                    <bpel:correlations>
+                        <bpel:correlation set="ClientCorrelationSet" initiate="no"></bpel:correlation>
+                    </bpel:correlations>
                 </bpel:onMessage>
                 
                 <bpel:onMessage partnerLink="client" operation="SetSpeakerLocationFunction" portType="tns:DistributedSoundScape" variable="SetSpeakerLocationCall">
@@ -574,6 +577,9 @@
 				            </bpel:correlations>
 				        </bpel:invoke>
                     </bpel:sequence>
+                    <bpel:correlations>
+                        <bpel:correlation set="ClientCorrelationSet" initiate="no"></bpel:correlation>
+                    </bpel:correlations>
                 </bpel:onMessage>
                 <bpel:onMessage partnerLink="client" operation="SetSoundScapeSourceLayoutFunction" portType="tns:DistributedSoundScape" variable="SetSoundScapeSourceLayoutRequestCall">
                     <bpel:sequence name="Sequence3">
@@ -643,6 +649,9 @@
 							</bpel:correlations>
 						</bpel:invoke>
                     </bpel:sequence>
+                    <bpel:correlations>
+                        <bpel:correlation set="ClientCorrelationSet" initiate="no"></bpel:correlation>
+                    </bpel:correlations>
                 </bpel:onMessage>
                 <bpel:onMessage partnerLink="client" operation="ProcessPlaybackCommandFunction" portType="tns:DistributedSoundScape" variable="ProcessPlaybackCommandRequestCall">
                     <bpel:sequence name="Sequence4">
@@ -687,6 +696,9 @@
                         
                         <bpel:invoke name="IsSongLoaded" partnerLink="UploadService" operation="IsSongLoaded" portType="us:UploadService" inputVariable="IsSongLoadedRequest" outputVariable="IsSongLoadedResponse"></bpel:invoke>
                         <bpel:assign validate="no" name="Assign">
+                            
+                            
+                            
                             <bpel:copy>
                                 <bpel:from><bpel:literal><tns:ProcessPlaybackCommandRequest xmlns:tns="http://www.example.org/ControlServiceElements/" xmlns:tns1="http://www.example.org/SoundScapeDataTypes/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Command>Command</Command>
@@ -706,8 +718,14 @@
   </Speakers>
 </tns:ProcessPlaybackCommandRequest>
 </bpel:literal></bpel:from>
+                                <bpel:to variable="ProcessPlaybackCommandRequest" part="ProcessPlaybackCommandRequest"></bpel:to>
+                            </bpel:copy>
+                            <bpel:copy>
+                                <bpel:from part="ProcessPlaybackCommandRequest" variable="ProcessPlaybackCommandRequestCall">
+                                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[playbackCommand]]></bpel:query>
+                                </bpel:from>
                                 <bpel:to part="ProcessPlaybackCommandRequest" variable="ProcessPlaybackCommandRequest">
-                                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[Speakers]]></bpel:query>
+                                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[Command]]></bpel:query>
                                 </bpel:to>
                             </bpel:copy>
                             <bpel:copy>
@@ -715,19 +733,7 @@
                                     <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[Speakers]]></bpel:query>
                                 </bpel:from>
                                 <bpel:to part="ProcessPlaybackCommandRequest" variable="ProcessPlaybackCommandRequest">
-                                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
-                                        <![CDATA[Speakers]]>
-                                    </bpel:query>
-                                </bpel:to>
-                            </bpel:copy>
-                            <bpel:copy>
-                                <bpel:from part="ProcessPlaybackCommandRequest" variable="ProcessPlaybackCommandRequestCall">
-                                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[playbackCommand/Command]]></bpel:query>
-                                </bpel:from>
-                                <bpel:to part="ProcessPlaybackCommandRequest" variable="ProcessPlaybackCommandRequest">
-                                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
-                                        <![CDATA[Command]]>
-                                    </bpel:query>
+                                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[Speakers]]></bpel:query>
                                 </bpel:to>
                             </bpel:copy>
                         </bpel:assign>
@@ -742,6 +748,9 @@
 							</bpel:correlations>
 						</bpel:invoke>
                     </bpel:sequence>
+                    <bpel:correlations>
+                        <bpel:correlation set="ClientCorrelationSet" initiate="no"></bpel:correlation>
+                    </bpel:correlations>
                 </bpel:onMessage>
             </bpel:pick>
 	        <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[$stop = "true"]]></bpel:condition>

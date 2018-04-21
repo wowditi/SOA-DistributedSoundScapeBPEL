@@ -30,6 +30,18 @@
     <vprop:propertyAlias messageType="wsdl:DeleteSongResponse" part="Response" propertyName="tns:conversationId">
     <vprop:query><![CDATA[/conversationId]]></vprop:query>
   </vprop:propertyAlias>
+    <vprop:propertyAlias messageType="tns:RemoveSpeakerRequest" part="RemoveSpeakerRequest" propertyName="tns:conversationId">
+    <vprop:query><![CDATA[/conversationId]]></vprop:query>
+  </vprop:propertyAlias>
+    <vprop:propertyAlias messageType="tns:SetSpeakerLocationRequest" part="SetSpeakerLocationRequest" propertyName="tns:conversationId">
+    <vprop:query><![CDATA[/conversationId]]></vprop:query>
+  </vprop:propertyAlias>
+    <vprop:propertyAlias messageType="tns:SetSoundScapeSourceLayoutRequest" part="SetSoundScapeSourceLayoutRequest" propertyName="tns:conversationId">
+    <vprop:query><![CDATA[/conversationId]]></vprop:query>
+  </vprop:propertyAlias>
+    <vprop:propertyAlias messageType="tns:ProcessPlaybackCommandRequest" part="ProcessPlaybackCommandRequest" propertyName="tns:conversationId">
+    <vprop:query><![CDATA[/conversationId]]></vprop:query>
+  </vprop:propertyAlias>
     <import location="UploadService.wsdl" namespace="http://www.example.org/UploadService/"/>
     <types>
 		<schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="DistributedSoundScape">
