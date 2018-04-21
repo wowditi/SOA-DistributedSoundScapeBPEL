@@ -3,7 +3,8 @@
 	xmlns="http://www.w3.org/2001/XMLSchema"
 	xmlns:tns="http://www.example.org/OrchestratorElements/"
 	xmlns:types="http://www.example.org/SoundScapeDataTypes/"
-	xmlns:pref="http://www.example.org/RegistrationServiceElements/" xmlns:pref1="http://www.example.org/ControlServiceElements/">
+	xmlns:pref="http://www.example.org/RegistrationServiceElements/"
+	xmlns:pref1="http://www.example.org/ControlServiceElements/" xmlns:pref2="http://www.example.org/UploadServiceElements/">
 	<import schemaLocation="SoundScapeDataTypes.xsd"
 		namespace="http://www.example.org/SoundScapeDataTypes/">
 	</import>
@@ -11,7 +12,10 @@
 	<import schemaLocation="RegistrationServiceElements.xsd"
 		namespace="http://www.example.org/RegistrationServiceElements/">
 	</import>
-	<import schemaLocation="ControlServiceElements.xsd" namespace="http://www.example.org/ControlServiceElements/"></import>
+	<import schemaLocation="ControlServiceElements.xsd"
+		namespace="http://www.example.org/ControlServiceElements/">
+	</import>
+	<import schemaLocation="UploadServiceElements.xsd" namespace="http://www.example.org/UploadServiceElements/"></import>
 	<complexType name="DeleteSongCall">
 		<sequence>
 			<element name="Link" type="types:Link"></element>
@@ -128,4 +132,12 @@
 
 	<element name="functionRequest" type="tns:conversationId"></element>
 
+
+	<element name="UploadSongCallback"
+		type="pref2:UploadSongResponse">
+	</element>
+
+	<element name="DeleteSongCallback"
+		type="pref2:DeleteSongResponse">
+	</element>
 </schema>

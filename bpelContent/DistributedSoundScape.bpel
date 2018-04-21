@@ -115,7 +115,8 @@
 
 		<bpel:variable name="clientRequest"
 			messageType="tns:functionRequest"></bpel:variable>
-	</bpel:variables>
+        <bpel:variable name="uploadSongCallback" messageType="tns:uploadSongCallbackhMessage"></bpel:variable>
+    </bpel:variables>
 
 	<!-- ================================================================= -->
 	<!-- ORCHESTRATION LOGIC -->
@@ -196,6 +197,7 @@
                 <bpel:to part="functionRequest" variable="clientRequest"></bpel:to>
             </bpel:copy>
         </bpel:assign>
+        
         <bpel:invoke name="RequestFunction" partnerLink="client" operation="requestFunction" portType="tns:DistributedSoundScapeCallback" inputVariable="clientRequest">
             <bpel:correlations>
                 <bpel:correlation set="ClientCorrelationSet" initiate="yes"></bpel:correlation>
@@ -210,25 +212,45 @@
 					</bpel:correlations>
 	            	<bpel:scope name="UploadSongScope">
 	            		<bpel:sequence>
-		            		<bpel:invoke name="UploadSong" partnerLink="UploadService" portType="us:UploadService" operation="UploadSong" inputVariable="UploadSongRequest">
+                            <bpel:assign validate="no" name="Assign">
+                                <bpel:copy><bpel:from part="UploadSongRequest" variable="UploadSongCall"></bpel:from>
+                                    <bpel:to part="Request" variable="UploadSongRequest"></bpel:to>
+                                </bpel:copy>
+                                <bpel:copy><bpel:from variable="uploadServiceConversationId"></bpel:from>
+                                    <bpel:to part="Request" variable="UploadSongRequest">
+                                        <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[conversationId]]></bpel:query>
+                                    </bpel:to>
+                                </bpel:copy>
+                            </bpel:assign>
+                            <bpel:invoke name="UploadSong" partnerLink="UploadService" portType="us:UploadService" operation="UploadSong" inputVariable="UploadSongRequest">
 								<bpel:correlations>
 									<bpel:correlation set="UploadCorrelationSet" initiate="yes"></bpel:correlation>
 								</bpel:correlations>
 							</bpel:invoke>
+							<bpel:invoke name="RequestFunction" partnerLink="client" operation="requestFunction" portType="tns:DistributedSoundScapeCallback" inputVariable="clientRequest">
+					            <bpel:correlations>
+					                <bpel:correlation set="ClientCorrelationSet" initiate="yes"></bpel:correlation>
+					            </bpel:correlations>
+					        </bpel:invoke>
 						</bpel:sequence>
 	            	</bpel:scope>
 	            	
 	            </bpel:onMessage>
 	            <bpel:onMessage partnerLink="UploadService" portType="us:UploadCallbackService" operation="UploadSongCallback" variable="UploadSongResponse">
-	            	<bpel:assign validate="no" name="Assign1">
-                        <bpel:copy>
-                            <bpel:from>
-                                <bpel:literal xml:space="preserve">true</bpel:literal>
-                            </bpel:from>
-                            <bpel:to variable="stop"></bpel:to>
-                        </bpel:copy>
-                    </bpel:assign>
-	            </bpel:onMessage>
+                    <bpel:correlations>
+                        <bpel:correlation set="UploadCorrelationSet" initiate="join"></bpel:correlation>
+                    </bpel:correlations>
+                    <bpel:sequence>
+                    	
+                        <bpel:assign validate="no" name="Assign">
+                            <bpel:copy>
+                                <bpel:from part="Response" variable="UploadSongResponse"></bpel:from>
+                                <bpel:to part="uploadSongCallbackhMessage" variable="uploadSongCallback"></bpel:to>
+                            </bpel:copy>
+                        </bpel:assign>
+                        <bpel:invoke name="callback" partnerLink="client" operation="uploadSongCallbackFunction" portType="tns:DistributedSoundScapeCallback" inputVariable="uploadSongCallback"></bpel:invoke>
+                    </bpel:sequence>
+                </bpel:onMessage>
 	            <bpel:onMessage partnerLink="client" portType="tns:DistributedSoundScape" operation="stopFunction" variable="tempId">
 	            	<bpel:correlations>
 						<bpel:correlation set="ClientCorrelationSet" initiate="no"></bpel:correlation>
@@ -243,9 +265,7 @@
                     </bpel:assign>
                 </bpel:onMessage>
 	        </bpel:pick>
-	        <bpel:condition>
-	        	$stop
-	        </bpel:condition>
+	        <bpel:condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[$stop = "true"]]></bpel:condition>
         </bpel:repeatUntil>
         
         <bpel:assign validate="no" name="RegisterUserResponseAssign">

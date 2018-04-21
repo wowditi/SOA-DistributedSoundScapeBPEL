@@ -71,6 +71,13 @@
 	<message name="finishMessage">
 		<part element="rs:RegisterUserResponse" name="RegisterUserResponse"/>
 	</message>
+	
+	<message name="uploadSongCallbackhMessage">
+		<part element="types:UploadSongCallback" name="uploadSongCallbackhMessage"/>
+	</message>
+	<message name="deleteSongCallbackhMessage">
+		<part element="types:DeleteSongCallback" name="deleteSongCallbackhMessage"/>
+	</message>
 
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 		PORT TYPE DEFINITION - A port type groups a set of operations into a logical 
@@ -113,6 +120,12 @@
 	<portType name="DistributedSoundScapeCallback">
 		<operation name="requestFunction">
 			<input message="tns:functionRequest"/>
+		</operation>
+		<operation name="uploadSongCallbackFunction">
+			<input message="tns:uploadSongCallbackhMessage"/>
+		</operation>
+		<operation name="deleteSongCallbackFunction">
+			<input message="tns:deleteSongCallbackhMessage"/>
 		</operation>
 	</portType>
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
@@ -194,6 +207,18 @@
 		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 		<operation name="requestFunction">
 			<soap:operation soapAction="DistributedSoundScape/requestFunction"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+		</operation>
+		<operation name="uploadSongCallbackFunction">
+			<soap:operation soapAction="DistributedSoundScape/uploadSongCallbackFunction"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+		</operation>
+		<operation name="deleteSongCallbackFunction">
+			<soap:operation soapAction="DistributedSoundScape/deleteSongCallbackFunction"/>
 			<input>
 				<soap:body use="literal"/>
 			</input>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project id="ba98cc4d-2299-4e84-8bae-c1277486097a" created="2.3.0" activeEnvironment="Default environment" name="SOAP Project 1" resourceRoot="${projectDir}" updated="2.3.0 2018-03-06T16:28:42Z" encryptionMode="Not encrypted" xmlns:con="http://eviware.com/soapui/config">
+<con:soapui-project id="618ca0a1-6d51-425b-b9c6-6a5216107978" created="2.3.0" activeEnvironment="Default environment" name="SOAP Project 2" resourceRoot="${projectDir}" updated="2.3.0 2018-03-06T16:28:42Z" encryptionMode="Not encrypted" xmlns:con="http://eviware.com/soapui/config">
   <con:settings/>
-  <con:interface xsi:type="con:WsdlInterface" id="d6e7c056-276a-4c20-a9f5-3e4010722a9e" wsaVersion="NONE" name="DistributedSoundScapeBinding" type="wsdl" bindingName="{DistributedSoundScape}DistributedSoundScapeBinding" soapVersion="1_1" anonymous="optional" definition="bpelContent/DistributedSoundScapeArtifacts.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <con:interface xsi:type="con:WsdlInterface" id="4b6806b0-1f5c-420c-8bef-5435410d50e0" wsaVersion="NONE" name="DistributedSoundScapeBinding" type="wsdl" bindingName="{DistributedSoundScape}DistributedSoundScapeBinding" soapVersion="1_1" anonymous="optional" definition="bpelContent/DistributedSoundScapeArtifacts.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <con:settings/>
     <con:definitionCache type="TEXT" rootPart="file:/B:/SOA/workspace/DistributedSoundScapeBPEL/bpelContent/DistributedSoundScapeArtifacts.wsdl">
       <con:part>
@@ -23,6 +23,7 @@
   <vprop:propertyAlias messageType="tns:UploadSongRequest" part="UploadSongRequest" propertyName="tns:conversationId">
     <vprop:query>/conversationId</vprop:query>
   </vprop:propertyAlias>
+  <vprop:propertyAlias messageType="tns:stopRequest" part="stopRequest" propertyName="tns:conversationId"/>
   <import location="UploadService.wsdl" namespace="http://www.example.org/UploadService/"/>
   <types>
     <schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="DistributedSoundScape" xmlns="http://www.w3.org/2001/XMLSchema">
@@ -69,6 +70,12 @@
   <message name="finishMessage">
     <part element="rs:RegisterUserResponse" name="RegisterUserResponse"/>
   </message>
+  <message name="uploadSongCallbackhMessage">
+    <part element="types:UploadSongCallback" name="uploadSongCallbackhMessage"/>
+  </message>
+  <message name="deleteSongCallbackhMessage">
+    <part element="types:DeleteSongCallback" name="deleteSongCallbackhMessage"/>
+  </message>
   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 		PORT TYPE DEFINITION - A port type groups a set of operations into a logical 
 		service unit. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -108,6 +115,12 @@
   <portType name="DistributedSoundScapeCallback">
     <operation name="requestFunction">
       <input message="tns:functionRequest"/>
+    </operation>
+    <operation name="uploadSongCallbackFunction">
+      <input message="tns:uploadSongCallbackhMessage"/>
+    </operation>
+    <operation name="deleteSongCallbackFunction">
+      <input message="tns:deleteSongCallbackhMessage"/>
     </operation>
   </portType>
   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
@@ -190,13 +203,25 @@
         <soap:body use="literal"/>
       </input>
     </operation>
+    <operation name="uploadSongCallbackFunction">
+      <soap:operation soapAction="DistributedSoundScape/uploadSongCallbackFunction"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+    </operation>
+    <operation name="deleteSongCallbackFunction">
+      <soap:operation soapAction="DistributedSoundScape/deleteSongCallbackFunction"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+    </operation>
   </binding>
   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 		SERVICE DEFINITION - A service groups a set of ports into a service unit. 
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
   <service name="DistributedSoundScapeServiceCallback">
     <port binding="tns:DistributedSoundScapeCallbackBinding" name="DistributedSoundScapePortCallbackPort">
-      <soap:address location="http://localhost:8181/onResult"/>
+      <soap:address location="http://localhost:8182/onResult"/>
     </port>
   </service>
   <service name="DistributedSoundScapeService">
@@ -336,7 +361,7 @@
   <element name="DeleteSongRequest" type="tns:DeleteSongRequest"/>
   <element name="IsSongLoadedRequest" type="tns:IsSongLoadedRequest"></element>
   <element name="IsSongLoadedResponse" type="boolean"/>
-  <element name="DeleteSongResponse" type="types:ASyncResponse"/>
+  <element name="DeleteSongResponse" type="tns:DeleteSongResponse"/>
   <element name="UploadSongResponse" type="tns:UploadSongResponse"/>
   <complexType name="DeleteSongRequest">
     <sequence>
@@ -362,6 +387,12 @@
     <sequence>
       <element name="conversationId" type="string"/>
       <element name="response" type="types:ASyncResponse"/>
+    </sequence>
+  </complexType>
+  <complexType name="DeleteSongResponse">
+    <sequence>
+      <element name="response" type="types:ASyncResponse"/>
+      <element name="conversationId" type="string"/>
     </sequence>
   </complexType>
 </schema>]]></con:content>
@@ -535,10 +566,11 @@
       </con:part>
       <con:part>
         <con:url>file:\B:\SOA\workspace\DistributedSoundScapeBPEL\bpelContent\schemas\type-definitions\OrchestratorElements.xsd</con:url>
-        <con:content><![CDATA[<schema targetNamespace="http://www.example.org/OrchestratorElements/" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/OrchestratorElements/" xmlns:types="http://www.example.org/SoundScapeDataTypes/" xmlns:pref="http://www.example.org/RegistrationServiceElements/" xmlns:pref1="http://www.example.org/ControlServiceElements/">
+        <con:content><![CDATA[<schema targetNamespace="http://www.example.org/OrchestratorElements/" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/OrchestratorElements/" xmlns:types="http://www.example.org/SoundScapeDataTypes/" xmlns:pref="http://www.example.org/RegistrationServiceElements/" xmlns:pref1="http://www.example.org/ControlServiceElements/" xmlns:pref2="http://www.example.org/UploadServiceElements/">
   <import schemaLocation="SoundScapeDataTypes.xsd" namespace="http://www.example.org/SoundScapeDataTypes/"></import>
   <import schemaLocation="RegistrationServiceElements.xsd" namespace="http://www.example.org/RegistrationServiceElements/"></import>
-  <import schemaLocation="ControlServiceElements.xsd" namespace="http://www.example.org/ControlServiceElements/"/>
+  <import schemaLocation="ControlServiceElements.xsd" namespace="http://www.example.org/ControlServiceElements/"></import>
+  <import schemaLocation="UploadServiceElements.xsd" namespace="http://www.example.org/UploadServiceElements/"/>
   <complexType name="DeleteSongCall">
     <sequence>
       <element name="Link" type="types:Link"/>
@@ -610,6 +642,8 @@
     </sequence>
   </complexType>
   <element name="functionRequest" type="tns:conversationId"/>
+  <element name="UploadSongCallback" type="pref2:UploadSongResponse"></element>
+  <element name="DeleteSongCallback" type="pref2:DeleteSongResponse"></element>
 </schema>]]></con:content>
         <con:type>http://www.w3.org/2001/XMLSchema</con:type>
       </con:part>
@@ -617,9 +651,9 @@
     <con:endpoints>
       <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
     </con:endpoints>
-    <con:operation id="ddace8e1-12ee-4a8d-a9b6-4126859647c8" isOneWay="false" action="DistributedSoundScape/AddSpeakerFunction" name="AddSpeakerFunction" bindingOperationName="AddSpeakerFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
+    <con:operation id="7327d8b2-a377-41f9-8a72-1759ec748f66" isOneWay="false" action="DistributedSoundScape/AddSpeakerFunction" name="AddSpeakerFunction" bindingOperationName="AddSpeakerFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
       <con:settings/>
-      <con:call id="57e7d153-8681-46d6-8936-6b65e9317a44" name="Request 1">
+      <con:call id="45883974-18e3-4891-887c-889f5e974311" name="Request 1">
         <con:settings/>
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -652,9 +686,9 @@
         <con:wsaConfig mustUnderstand="NONE" version="200508" action="DistributedSoundScape/AddSpeakerFunction"/>
       </con:call>
     </con:operation>
-    <con:operation id="8d843e27-0608-446d-bdfa-5078741af4e1" isOneWay="false" action="DistributedSoundScape/DeleteSongFunction" name="DeleteSongFunction" bindingOperationName="DeleteSongFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
+    <con:operation id="edb2785e-6c99-44a2-a5e1-171e4195fe5c" isOneWay="false" action="DistributedSoundScape/DeleteSongFunction" name="DeleteSongFunction" bindingOperationName="DeleteSongFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
       <con:settings/>
-      <con:call id="d1ddaffc-b305-4551-b9ef-af08faab62dd" name="Request 1">
+      <con:call id="e4d9150a-4ee2-4a4c-a20b-c2967c061d66" name="Request 1">
         <con:settings/>
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -692,9 +726,9 @@
         <con:wsaConfig mustUnderstand="NONE" version="200508" action="DistributedSoundScape/DeleteSongFunction"/>
       </con:call>
     </con:operation>
-    <con:operation id="892dd70f-a40c-4b15-96c5-db1c38fb63d7" isOneWay="false" action="DistributedSoundScape/finishFunction" name="finishFunction" bindingOperationName="finishFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
+    <con:operation id="02d646d1-867b-4328-b539-4cc07260a61d" isOneWay="false" action="DistributedSoundScape/finishFunction" name="finishFunction" bindingOperationName="finishFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
       <con:settings/>
-      <con:call id="72ac5409-ac45-4190-a8ca-42f3c0c737f7" name="Request 1">
+      <con:call id="8df845ea-3d3e-4061-80d0-e6586bfdb5cd" name="Request 1">
         <con:settings/>
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -711,9 +745,9 @@
         <con:wsaConfig mustUnderstand="NONE" version="200508" action="DistributedSoundScape/finishFunction"/>
       </con:call>
     </con:operation>
-    <con:operation id="813d6f0a-3ca5-46d9-86fe-214b3c631d58" isOneWay="false" action="DistributedSoundScape/IsSongLoadedFunction" name="IsSongLoadedFunction" bindingOperationName="IsSongLoadedFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
+    <con:operation id="bb0099ca-8653-4dba-a90f-79aac6302a1a" isOneWay="false" action="DistributedSoundScape/IsSongLoadedFunction" name="IsSongLoadedFunction" bindingOperationName="IsSongLoadedFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
       <con:settings/>
-      <con:call id="fec722b7-a091-4aed-b182-a58b979e3985" name="Request 1">
+      <con:call id="777da659-c2d7-4252-bb60-e19285c61147" name="Request 1">
         <con:settings/>
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -751,9 +785,9 @@
         <con:wsaConfig mustUnderstand="NONE" version="200508" action="DistributedSoundScape/IsSongLoadedFunction"/>
       </con:call>
     </con:operation>
-    <con:operation id="3342c235-7d1f-4b3f-b4a3-e072fee82b6d" isOneWay="false" action="DistributedSoundScape/ProcessPlaybackCommandFunction" name="ProcessPlaybackCommandFunction" bindingOperationName="ProcessPlaybackCommandFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
+    <con:operation id="3f6e3c70-8598-4883-ac92-6bbb109d2a74" isOneWay="false" action="DistributedSoundScape/ProcessPlaybackCommandFunction" name="ProcessPlaybackCommandFunction" bindingOperationName="ProcessPlaybackCommandFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
       <con:settings/>
-      <con:call id="a06e711d-c455-4149-8cc3-abfd620a6841" name="Request 1">
+      <con:call id="761978b9-8211-41b8-af51-9e23b04945c2" name="Request 1">
         <con:settings/>
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -790,9 +824,9 @@
         <con:wsaConfig mustUnderstand="NONE" version="200508" action="DistributedSoundScape/ProcessPlaybackCommandFunction"/>
       </con:call>
     </con:operation>
-    <con:operation id="26d18a43-630c-47ef-bc30-ec6fe0d4b630" isOneWay="false" action="DistributedSoundScape/RegisterUserFunction" name="RegisterUserFunction" bindingOperationName="RegisterUserFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
+    <con:operation id="6599a48b-cd97-44bd-865f-2169deee8d45" isOneWay="false" action="DistributedSoundScape/RegisterUserFunction" name="RegisterUserFunction" bindingOperationName="RegisterUserFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
       <con:settings/>
-      <con:call id="731b92b9-df26-4bfa-bf0c-6de6934d4647" name="Request 1">
+      <con:call id="1a61279e-e535-4c1c-b9cf-c20650f202a8" name="Request 1">
         <con:settings/>
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -815,9 +849,9 @@
         <con:wsaConfig mustUnderstand="NONE" version="200508" action="DistributedSoundScape/RegisterUserFunction"/>
       </con:call>
     </con:operation>
-    <con:operation id="bdcc0850-2e3d-42b1-9bdf-10cf8402400d" isOneWay="false" action="DistributedSoundScape/RemoveSpeakerFunction" name="RemoveSpeakerFunction" bindingOperationName="RemoveSpeakerFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
+    <con:operation id="af99bbf6-696f-427c-a4c2-52805e227d6b" isOneWay="false" action="DistributedSoundScape/RemoveSpeakerFunction" name="RemoveSpeakerFunction" bindingOperationName="RemoveSpeakerFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
       <con:settings/>
-      <con:call id="e9150121-d4f0-4a53-8fda-3182aa379db8" name="Request 1">
+      <con:call id="9827024c-17e9-4c01-9e27-b3dcf356f0d5" name="Request 1">
         <con:settings/>
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -843,9 +877,9 @@
         <con:wsaConfig mustUnderstand="NONE" version="200508" action="DistributedSoundScape/RemoveSpeakerFunction"/>
       </con:call>
     </con:operation>
-    <con:operation id="48690d10-0396-48e0-a625-3843a3e3cbe0" isOneWay="false" action="DistributedSoundScape/SetSoundScapeSourceLayoutFunction" name="SetSoundScapeSourceLayoutFunction" bindingOperationName="SetSoundScapeSourceLayoutFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
+    <con:operation id="f776553b-4dd4-451c-b9df-6f7c861e9ee6" isOneWay="false" action="DistributedSoundScape/SetSoundScapeSourceLayoutFunction" name="SetSoundScapeSourceLayoutFunction" bindingOperationName="SetSoundScapeSourceLayoutFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
       <con:settings/>
-      <con:call id="94539bfb-ee12-4d96-a0c3-6c69298e4323" name="Request 1">
+      <con:call id="6bba70c1-18fb-410e-8531-669d9f75395c" name="Request 1">
         <con:settings/>
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -893,9 +927,9 @@
         <con:wsaConfig mustUnderstand="NONE" version="200508" action="DistributedSoundScape/SetSoundScapeSourceLayoutFunction"/>
       </con:call>
     </con:operation>
-    <con:operation id="12250a94-776b-40f2-899a-79fbee177bb5" isOneWay="false" action="DistributedSoundScape/stopFunction" name="stopFunction" bindingOperationName="stopFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
+    <con:operation id="8e401d1f-1f3e-4f3f-8563-f735c842588e" isOneWay="false" action="DistributedSoundScape/stopFunction" name="stopFunction" bindingOperationName="stopFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
       <con:settings/>
-      <con:call id="52810efb-2ece-4809-9660-998c8b793c0c" name="Request 1">
+      <con:call id="7301e30d-0a0a-4914-ab8d-33ac85adf3e9" name="Request 1">
         <con:settings/>
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -912,9 +946,9 @@
         <con:wsaConfig mustUnderstand="NONE" version="200508" action="DistributedSoundScape/stopFunction"/>
       </con:call>
     </con:operation>
-    <con:operation id="4d0b0ed7-e7c3-4237-bb53-489718b7b406" isOneWay="false" action="DistributedSoundScape/UploadSongFunction" name="UploadSongFunction" bindingOperationName="UploadSongFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
+    <con:operation id="590c948d-5d7f-4ffa-8fda-93f1869f05bf" isOneWay="false" action="DistributedSoundScape/UploadSongFunction" name="UploadSongFunction" bindingOperationName="UploadSongFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
       <con:settings/>
-      <con:call id="08680027-f3f8-4a62-b421-b9759f5125fe" name="Request 1">
+      <con:call id="ba8c305b-5d47-4a98-a22f-ca3902fad1a4" name="Request 1">
         <con:settings/>
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -953,7 +987,7 @@
       </con:call>
     </con:operation>
   </con:interface>
-  <con:interface xsi:type="con:WsdlInterface" id="bc8e8305-c19b-4dd3-a760-db01e1a58377" wsaVersion="NONE" name="UploadServiceSOAP" type="wsdl" bindingName="{http://www.example.org/UploadService/}UploadServiceSOAP" soapVersion="1_1" anonymous="optional" definition="bpelContent/DistributedSoundScapeArtifacts.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <con:interface xsi:type="con:WsdlInterface" id="34dcdde7-8563-464c-8937-61c94572ddaf" wsaVersion="NONE" name="UploadServiceSOAP" type="wsdl" bindingName="{http://www.example.org/UploadService/}UploadServiceSOAP" soapVersion="1_1" anonymous="optional" definition="bpelContent/DistributedSoundScapeArtifacts.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <con:settings/>
     <con:definitionCache type="TEXT" rootPart="file:/B:/SOA/workspace/DistributedSoundScapeBPEL/bpelContent/DistributedSoundScapeArtifacts.wsdl">
       <con:part>
@@ -975,6 +1009,7 @@
   <vprop:propertyAlias messageType="tns:UploadSongRequest" part="UploadSongRequest" propertyName="tns:conversationId">
     <vprop:query>/conversationId</vprop:query>
   </vprop:propertyAlias>
+  <vprop:propertyAlias messageType="tns:stopRequest" part="stopRequest" propertyName="tns:conversationId"/>
   <import location="UploadService.wsdl" namespace="http://www.example.org/UploadService/"/>
   <types>
     <schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="DistributedSoundScape" xmlns="http://www.w3.org/2001/XMLSchema">
@@ -1021,6 +1056,12 @@
   <message name="finishMessage">
     <part element="rs:RegisterUserResponse" name="RegisterUserResponse"/>
   </message>
+  <message name="uploadSongCallbackhMessage">
+    <part element="types:UploadSongCallback" name="uploadSongCallbackhMessage"/>
+  </message>
+  <message name="deleteSongCallbackhMessage">
+    <part element="types:DeleteSongCallback" name="deleteSongCallbackhMessage"/>
+  </message>
   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 		PORT TYPE DEFINITION - A port type groups a set of operations into a logical 
 		service unit. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -1060,6 +1101,12 @@
   <portType name="DistributedSoundScapeCallback">
     <operation name="requestFunction">
       <input message="tns:functionRequest"/>
+    </operation>
+    <operation name="uploadSongCallbackFunction">
+      <input message="tns:uploadSongCallbackhMessage"/>
+    </operation>
+    <operation name="deleteSongCallbackFunction">
+      <input message="tns:deleteSongCallbackhMessage"/>
     </operation>
   </portType>
   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
@@ -1142,13 +1189,25 @@
         <soap:body use="literal"/>
       </input>
     </operation>
+    <operation name="uploadSongCallbackFunction">
+      <soap:operation soapAction="DistributedSoundScape/uploadSongCallbackFunction"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+    </operation>
+    <operation name="deleteSongCallbackFunction">
+      <soap:operation soapAction="DistributedSoundScape/deleteSongCallbackFunction"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+    </operation>
   </binding>
   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 		SERVICE DEFINITION - A service groups a set of ports into a service unit. 
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
   <service name="DistributedSoundScapeServiceCallback">
     <port binding="tns:DistributedSoundScapeCallbackBinding" name="DistributedSoundScapePortCallbackPort">
-      <soap:address location="http://localhost:8181/onResult"/>
+      <soap:address location="http://localhost:8182/onResult"/>
     </port>
   </service>
   <service name="DistributedSoundScapeService">
@@ -1288,7 +1347,7 @@
   <element name="DeleteSongRequest" type="tns:DeleteSongRequest"/>
   <element name="IsSongLoadedRequest" type="tns:IsSongLoadedRequest"></element>
   <element name="IsSongLoadedResponse" type="boolean"/>
-  <element name="DeleteSongResponse" type="types:ASyncResponse"/>
+  <element name="DeleteSongResponse" type="tns:DeleteSongResponse"/>
   <element name="UploadSongResponse" type="tns:UploadSongResponse"/>
   <complexType name="DeleteSongRequest">
     <sequence>
@@ -1314,6 +1373,12 @@
     <sequence>
       <element name="conversationId" type="string"/>
       <element name="response" type="types:ASyncResponse"/>
+    </sequence>
+  </complexType>
+  <complexType name="DeleteSongResponse">
+    <sequence>
+      <element name="response" type="types:ASyncResponse"/>
+      <element name="conversationId" type="string"/>
     </sequence>
   </complexType>
 </schema>]]></con:content>
@@ -1487,10 +1552,11 @@
       </con:part>
       <con:part>
         <con:url>file:\B:\SOA\workspace\DistributedSoundScapeBPEL\bpelContent\schemas\type-definitions\OrchestratorElements.xsd</con:url>
-        <con:content><![CDATA[<schema targetNamespace="http://www.example.org/OrchestratorElements/" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/OrchestratorElements/" xmlns:types="http://www.example.org/SoundScapeDataTypes/" xmlns:pref="http://www.example.org/RegistrationServiceElements/" xmlns:pref1="http://www.example.org/ControlServiceElements/">
+        <con:content><![CDATA[<schema targetNamespace="http://www.example.org/OrchestratorElements/" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/OrchestratorElements/" xmlns:types="http://www.example.org/SoundScapeDataTypes/" xmlns:pref="http://www.example.org/RegistrationServiceElements/" xmlns:pref1="http://www.example.org/ControlServiceElements/" xmlns:pref2="http://www.example.org/UploadServiceElements/">
   <import schemaLocation="SoundScapeDataTypes.xsd" namespace="http://www.example.org/SoundScapeDataTypes/"></import>
   <import schemaLocation="RegistrationServiceElements.xsd" namespace="http://www.example.org/RegistrationServiceElements/"></import>
-  <import schemaLocation="ControlServiceElements.xsd" namespace="http://www.example.org/ControlServiceElements/"/>
+  <import schemaLocation="ControlServiceElements.xsd" namespace="http://www.example.org/ControlServiceElements/"></import>
+  <import schemaLocation="UploadServiceElements.xsd" namespace="http://www.example.org/UploadServiceElements/"/>
   <complexType name="DeleteSongCall">
     <sequence>
       <element name="Link" type="types:Link"/>
@@ -1562,6 +1628,8 @@
     </sequence>
   </complexType>
   <element name="functionRequest" type="tns:conversationId"/>
+  <element name="UploadSongCallback" type="pref2:UploadSongResponse"></element>
+  <element name="DeleteSongCallback" type="pref2:DeleteSongResponse"></element>
 </schema>]]></con:content>
         <con:type>http://www.w3.org/2001/XMLSchema</con:type>
       </con:part>
@@ -1569,9 +1637,9 @@
     <con:endpoints>
       <con:endpoint>http://localhost:9080/DistributedSoundScape/services/UploadService/</con:endpoint>
     </con:endpoints>
-    <con:operation id="be1fc968-273c-4a5f-902b-f92906de25f2" isOneWay="false" action="http://www.example.org/UploadService/DeleteSong" name="DeleteSong" bindingOperationName="DeleteSong" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
+    <con:operation id="99b69a52-0113-4c6d-badf-208ea03a7aa3" isOneWay="false" action="http://www.example.org/UploadService/DeleteSong" name="DeleteSong" bindingOperationName="DeleteSong" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
       <con:settings/>
-      <con:call id="1c441ca7-c969-430b-b9a6-a78abb1bfe5c" name="Request 1">
+      <con:call id="8c370bb2-b219-45f5-8740-781e34823268" name="Request 1">
         <con:settings/>
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>http://localhost:9080/DistributedSoundScape/services/UploadService/</con:endpoint>
@@ -1608,9 +1676,9 @@
         <con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.example.org/UploadService/DeleteSong"/>
       </con:call>
     </con:operation>
-    <con:operation id="7e61fea3-9c8a-466a-b6da-d25835850d6b" isOneWay="false" action="http://www.example.org/UploadService/IsSongLoaded" name="IsSongLoaded" bindingOperationName="IsSongLoaded" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
+    <con:operation id="91de5331-e71e-43ed-92c8-62607ee7b14c" isOneWay="false" action="http://www.example.org/UploadService/IsSongLoaded" name="IsSongLoaded" bindingOperationName="IsSongLoaded" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
       <con:settings/>
-      <con:call id="1aab93c5-f7df-4d87-bc64-9672958f79be" name="Request 1">
+      <con:call id="92e1c266-138b-4398-b7da-c252b4cec05f" name="Request 1">
         <con:settings/>
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>http://localhost:9080/DistributedSoundScape/services/UploadService/</con:endpoint>
@@ -1647,9 +1715,9 @@
         <con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.example.org/UploadService/IsSongLoaded"/>
       </con:call>
     </con:operation>
-    <con:operation id="df3615a2-c767-4dc4-a244-af3759d2e122" isOneWay="false" action="http://www.example.org/UploadService/UploadSong" name="UploadSong" bindingOperationName="UploadSong" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
+    <con:operation id="7d37f590-825f-436c-b397-22927ddce3a4" isOneWay="false" action="http://www.example.org/UploadService/UploadSong" name="UploadSong" bindingOperationName="UploadSong" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
       <con:settings/>
-      <con:call id="92fe3684-57b8-4ecd-a486-43627c06df49" name="Request 1">
+      <con:call id="208183da-1f47-4142-8fdc-f58f89193d67" name="Request 1">
         <con:settings/>
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>http://localhost:9080/DistributedSoundScape/services/UploadService/</con:endpoint>
@@ -1688,7 +1756,7 @@
       </con:call>
     </con:operation>
   </con:interface>
-  <con:interface xsi:type="con:WsdlInterface" id="e3af6d85-7a9b-4a46-b753-b437104f9fc7" wsaVersion="NONE" name="DistributedSoundScapeCallbackBinding" type="wsdl" bindingName="{DistributedSoundScape}DistributedSoundScapeCallbackBinding" soapVersion="1_1" anonymous="optional" definition="bpelContent/DistributedSoundScapeArtifacts.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <con:interface xsi:type="con:WsdlInterface" id="1f71e564-341b-4549-b986-07dda30cd238" wsaVersion="NONE" name="DistributedSoundScapeCallbackBinding" type="wsdl" bindingName="{DistributedSoundScape}DistributedSoundScapeCallbackBinding" soapVersion="1_1" anonymous="optional" definition="bpelContent/DistributedSoundScapeArtifacts.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <con:settings/>
     <con:definitionCache type="TEXT" rootPart="file:/B:/SOA/workspace/DistributedSoundScapeBPEL/bpelContent/DistributedSoundScapeArtifacts.wsdl">
       <con:part>
@@ -1710,6 +1778,7 @@
   <vprop:propertyAlias messageType="tns:UploadSongRequest" part="UploadSongRequest" propertyName="tns:conversationId">
     <vprop:query>/conversationId</vprop:query>
   </vprop:propertyAlias>
+  <vprop:propertyAlias messageType="tns:stopRequest" part="stopRequest" propertyName="tns:conversationId"/>
   <import location="UploadService.wsdl" namespace="http://www.example.org/UploadService/"/>
   <types>
     <schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="DistributedSoundScape" xmlns="http://www.w3.org/2001/XMLSchema">
@@ -1756,6 +1825,12 @@
   <message name="finishMessage">
     <part element="rs:RegisterUserResponse" name="RegisterUserResponse"/>
   </message>
+  <message name="uploadSongCallbackhMessage">
+    <part element="types:UploadSongCallback" name="uploadSongCallbackhMessage"/>
+  </message>
+  <message name="deleteSongCallbackhMessage">
+    <part element="types:DeleteSongCallback" name="deleteSongCallbackhMessage"/>
+  </message>
   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 		PORT TYPE DEFINITION - A port type groups a set of operations into a logical 
 		service unit. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -1795,6 +1870,12 @@
   <portType name="DistributedSoundScapeCallback">
     <operation name="requestFunction">
       <input message="tns:functionRequest"/>
+    </operation>
+    <operation name="uploadSongCallbackFunction">
+      <input message="tns:uploadSongCallbackhMessage"/>
+    </operation>
+    <operation name="deleteSongCallbackFunction">
+      <input message="tns:deleteSongCallbackhMessage"/>
     </operation>
   </portType>
   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
@@ -1877,13 +1958,25 @@
         <soap:body use="literal"/>
       </input>
     </operation>
+    <operation name="uploadSongCallbackFunction">
+      <soap:operation soapAction="DistributedSoundScape/uploadSongCallbackFunction"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+    </operation>
+    <operation name="deleteSongCallbackFunction">
+      <soap:operation soapAction="DistributedSoundScape/deleteSongCallbackFunction"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+    </operation>
   </binding>
   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 		SERVICE DEFINITION - A service groups a set of ports into a service unit. 
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
   <service name="DistributedSoundScapeServiceCallback">
     <port binding="tns:DistributedSoundScapeCallbackBinding" name="DistributedSoundScapePortCallbackPort">
-      <soap:address location="http://localhost:8181/onResult"/>
+      <soap:address location="http://localhost:8182/onResult"/>
     </port>
   </service>
   <service name="DistributedSoundScapeService">
@@ -2023,7 +2116,7 @@
   <element name="DeleteSongRequest" type="tns:DeleteSongRequest"/>
   <element name="IsSongLoadedRequest" type="tns:IsSongLoadedRequest"></element>
   <element name="IsSongLoadedResponse" type="boolean"/>
-  <element name="DeleteSongResponse" type="types:ASyncResponse"/>
+  <element name="DeleteSongResponse" type="tns:DeleteSongResponse"/>
   <element name="UploadSongResponse" type="tns:UploadSongResponse"/>
   <complexType name="DeleteSongRequest">
     <sequence>
@@ -2049,6 +2142,12 @@
     <sequence>
       <element name="conversationId" type="string"/>
       <element name="response" type="types:ASyncResponse"/>
+    </sequence>
+  </complexType>
+  <complexType name="DeleteSongResponse">
+    <sequence>
+      <element name="response" type="types:ASyncResponse"/>
+      <element name="conversationId" type="string"/>
     </sequence>
   </complexType>
 </schema>]]></con:content>
@@ -2222,10 +2321,11 @@
       </con:part>
       <con:part>
         <con:url>file:\B:\SOA\workspace\DistributedSoundScapeBPEL\bpelContent\schemas\type-definitions\OrchestratorElements.xsd</con:url>
-        <con:content><![CDATA[<schema targetNamespace="http://www.example.org/OrchestratorElements/" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/OrchestratorElements/" xmlns:types="http://www.example.org/SoundScapeDataTypes/" xmlns:pref="http://www.example.org/RegistrationServiceElements/" xmlns:pref1="http://www.example.org/ControlServiceElements/">
+        <con:content><![CDATA[<schema targetNamespace="http://www.example.org/OrchestratorElements/" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/OrchestratorElements/" xmlns:types="http://www.example.org/SoundScapeDataTypes/" xmlns:pref="http://www.example.org/RegistrationServiceElements/" xmlns:pref1="http://www.example.org/ControlServiceElements/" xmlns:pref2="http://www.example.org/UploadServiceElements/">
   <import schemaLocation="SoundScapeDataTypes.xsd" namespace="http://www.example.org/SoundScapeDataTypes/"></import>
   <import schemaLocation="RegistrationServiceElements.xsd" namespace="http://www.example.org/RegistrationServiceElements/"></import>
-  <import schemaLocation="ControlServiceElements.xsd" namespace="http://www.example.org/ControlServiceElements/"/>
+  <import schemaLocation="ControlServiceElements.xsd" namespace="http://www.example.org/ControlServiceElements/"></import>
+  <import schemaLocation="UploadServiceElements.xsd" namespace="http://www.example.org/UploadServiceElements/"/>
   <complexType name="DeleteSongCall">
     <sequence>
       <element name="Link" type="types:Link"/>
@@ -2297,6 +2397,8 @@
     </sequence>
   </complexType>
   <element name="functionRequest" type="tns:conversationId"/>
+  <element name="UploadSongCallback" type="pref2:UploadSongResponse"></element>
+  <element name="DeleteSongCallback" type="pref2:DeleteSongResponse"></element>
 </schema>]]></con:content>
         <con:type>http://www.w3.org/2001/XMLSchema</con:type>
       </con:part>
@@ -2304,9 +2406,35 @@
     <con:endpoints>
       <con:endpoint>http://localhost:8182/onResult</con:endpoint>
     </con:endpoints>
-    <con:operation id="5e34ddf0-52b6-4f49-9c8d-03fd8cba479f" isOneWay="false" action="DistributedSoundScape/requestFunction" name="requestFunction" bindingOperationName="requestFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
+    <con:operation id="3857db0a-9103-4970-95b6-693aede8703b" isOneWay="false" action="DistributedSoundScape/deleteSongCallbackFunction" name="deleteSongCallbackFunction" bindingOperationName="deleteSongCallbackFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
       <con:settings/>
-      <con:call id="4beff844-b459-4629-a872-a8a6df65d98b" name="Request 1">
+      <con:call id="27daacf3-32f5-4dff-9691-799bce67f5e7" name="Request 1">
+        <con:settings/>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>http://localhost:8182/onResult</con:endpoint>
+        <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://www.example.org/OrchestratorElements/">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <orc:DeleteSongCallback>\r
+         <response>\r
+            <!--You have a CHOICE of the next 2 items at this level-->\r
+            <Successfull>?</Successfull>\r
+            <ErrorMessage>?</ErrorMessage>\r
+         </response>\r
+         <conversationId>?</conversationId>\r
+      </orc:DeleteSongCallback>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:wsaConfig mustUnderstand="NONE" version="200508" action="DistributedSoundScape/deleteSongCallbackFunction"/>
+      </con:call>
+    </con:operation>
+    <con:operation id="f352f7a6-edf2-424f-b836-46617491aa3e" isOneWay="false" action="DistributedSoundScape/requestFunction" name="requestFunction" bindingOperationName="requestFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
+      <con:settings/>
+      <con:call id="dcfedc47-db54-4240-8faf-688466a88cf3" name="Request 1">
         <con:settings/>
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>http://localhost:8182/onResult</con:endpoint>
@@ -2323,8 +2451,34 @@
         <con:wsaConfig mustUnderstand="NONE" version="200508" action="DistributedSoundScape/requestFunction"/>
       </con:call>
     </con:operation>
+    <con:operation id="4223736e-d3e0-49c9-9516-909087d95d87" isOneWay="false" action="DistributedSoundScape/uploadSongCallbackFunction" name="uploadSongCallbackFunction" bindingOperationName="uploadSongCallbackFunction" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
+      <con:settings/>
+      <con:call id="ac9cf316-ae86-4b21-be14-f82b60066ae9" name="Request 1">
+        <con:settings/>
+        <con:encoding>UTF-8</con:encoding>
+        <con:endpoint>http://localhost:8182/onResult</con:endpoint>
+        <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://www.example.org/OrchestratorElements/">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <orc:UploadSongCallback>\r
+         <conversationId>?</conversationId>\r
+         <response>\r
+            <!--You have a CHOICE of the next 2 items at this level-->\r
+            <Successfull>?</Successfull>\r
+            <ErrorMessage>?</ErrorMessage>\r
+         </response>\r
+      </orc:UploadSongCallback>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request>
+        <con:credentials>
+          <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+          <con:authType>No Authorization</con:authType>
+        </con:credentials>
+        <con:wsaConfig mustUnderstand="NONE" version="200508" action="DistributedSoundScape/uploadSongCallbackFunction"/>
+      </con:call>
+    </con:operation>
   </con:interface>
-  <con:interface xsi:type="con:WsdlInterface" id="568e37f2-dd72-47fb-a442-2b7f9ad3b601" wsaVersion="NONE" name="UploadCallbackServiceSOAP" type="wsdl" bindingName="{http://www.example.org/UploadService/}UploadCallbackServiceSOAP" soapVersion="1_1" anonymous="optional" definition="bpelContent/DistributedSoundScapeArtifacts.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <con:interface xsi:type="con:WsdlInterface" id="0395e1d9-db1a-476b-81ef-5ab0eb8c4599" wsaVersion="NONE" name="UploadCallbackServiceSOAP" type="wsdl" bindingName="{http://www.example.org/UploadService/}UploadCallbackServiceSOAP" soapVersion="1_1" anonymous="optional" definition="bpelContent/DistributedSoundScapeArtifacts.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <con:settings/>
     <con:definitionCache type="TEXT" rootPart="file:/B:/SOA/workspace/DistributedSoundScapeBPEL/bpelContent/DistributedSoundScapeArtifacts.wsdl">
       <con:part>
@@ -2346,6 +2500,7 @@
   <vprop:propertyAlias messageType="tns:UploadSongRequest" part="UploadSongRequest" propertyName="tns:conversationId">
     <vprop:query>/conversationId</vprop:query>
   </vprop:propertyAlias>
+  <vprop:propertyAlias messageType="tns:stopRequest" part="stopRequest" propertyName="tns:conversationId"/>
   <import location="UploadService.wsdl" namespace="http://www.example.org/UploadService/"/>
   <types>
     <schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="DistributedSoundScape" xmlns="http://www.w3.org/2001/XMLSchema">
@@ -2392,6 +2547,12 @@
   <message name="finishMessage">
     <part element="rs:RegisterUserResponse" name="RegisterUserResponse"/>
   </message>
+  <message name="uploadSongCallbackhMessage">
+    <part element="types:UploadSongCallback" name="uploadSongCallbackhMessage"/>
+  </message>
+  <message name="deleteSongCallbackhMessage">
+    <part element="types:DeleteSongCallback" name="deleteSongCallbackhMessage"/>
+  </message>
   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 		PORT TYPE DEFINITION - A port type groups a set of operations into a logical 
 		service unit. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
@@ -2431,6 +2592,12 @@
   <portType name="DistributedSoundScapeCallback">
     <operation name="requestFunction">
       <input message="tns:functionRequest"/>
+    </operation>
+    <operation name="uploadSongCallbackFunction">
+      <input message="tns:uploadSongCallbackhMessage"/>
+    </operation>
+    <operation name="deleteSongCallbackFunction">
+      <input message="tns:deleteSongCallbackhMessage"/>
     </operation>
   </portType>
   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
@@ -2513,13 +2680,25 @@
         <soap:body use="literal"/>
       </input>
     </operation>
+    <operation name="uploadSongCallbackFunction">
+      <soap:operation soapAction="DistributedSoundScape/uploadSongCallbackFunction"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+    </operation>
+    <operation name="deleteSongCallbackFunction">
+      <soap:operation soapAction="DistributedSoundScape/deleteSongCallbackFunction"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+    </operation>
   </binding>
   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 		SERVICE DEFINITION - A service groups a set of ports into a service unit. 
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
   <service name="DistributedSoundScapeServiceCallback">
     <port binding="tns:DistributedSoundScapeCallbackBinding" name="DistributedSoundScapePortCallbackPort">
-      <soap:address location="http://localhost:8181/onResult"/>
+      <soap:address location="http://localhost:8182/onResult"/>
     </port>
   </service>
   <service name="DistributedSoundScapeService">
@@ -2659,7 +2838,7 @@
   <element name="DeleteSongRequest" type="tns:DeleteSongRequest"/>
   <element name="IsSongLoadedRequest" type="tns:IsSongLoadedRequest"></element>
   <element name="IsSongLoadedResponse" type="boolean"/>
-  <element name="DeleteSongResponse" type="types:ASyncResponse"/>
+  <element name="DeleteSongResponse" type="tns:DeleteSongResponse"/>
   <element name="UploadSongResponse" type="tns:UploadSongResponse"/>
   <complexType name="DeleteSongRequest">
     <sequence>
@@ -2685,6 +2864,12 @@
     <sequence>
       <element name="conversationId" type="string"/>
       <element name="response" type="types:ASyncResponse"/>
+    </sequence>
+  </complexType>
+  <complexType name="DeleteSongResponse">
+    <sequence>
+      <element name="response" type="types:ASyncResponse"/>
+      <element name="conversationId" type="string"/>
     </sequence>
   </complexType>
 </schema>]]></con:content>
@@ -2858,10 +3043,11 @@
       </con:part>
       <con:part>
         <con:url>file:\B:\SOA\workspace\DistributedSoundScapeBPEL\bpelContent\schemas\type-definitions\OrchestratorElements.xsd</con:url>
-        <con:content><![CDATA[<schema targetNamespace="http://www.example.org/OrchestratorElements/" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/OrchestratorElements/" xmlns:types="http://www.example.org/SoundScapeDataTypes/" xmlns:pref="http://www.example.org/RegistrationServiceElements/" xmlns:pref1="http://www.example.org/ControlServiceElements/">
+        <con:content><![CDATA[<schema targetNamespace="http://www.example.org/OrchestratorElements/" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.example.org/OrchestratorElements/" xmlns:types="http://www.example.org/SoundScapeDataTypes/" xmlns:pref="http://www.example.org/RegistrationServiceElements/" xmlns:pref1="http://www.example.org/ControlServiceElements/" xmlns:pref2="http://www.example.org/UploadServiceElements/">
   <import schemaLocation="SoundScapeDataTypes.xsd" namespace="http://www.example.org/SoundScapeDataTypes/"></import>
   <import schemaLocation="RegistrationServiceElements.xsd" namespace="http://www.example.org/RegistrationServiceElements/"></import>
-  <import schemaLocation="ControlServiceElements.xsd" namespace="http://www.example.org/ControlServiceElements/"/>
+  <import schemaLocation="ControlServiceElements.xsd" namespace="http://www.example.org/ControlServiceElements/"></import>
+  <import schemaLocation="UploadServiceElements.xsd" namespace="http://www.example.org/UploadServiceElements/"/>
   <complexType name="DeleteSongCall">
     <sequence>
       <element name="Link" type="types:Link"/>
@@ -2933,6 +3119,8 @@
     </sequence>
   </complexType>
   <element name="functionRequest" type="tns:conversationId"/>
+  <element name="UploadSongCallback" type="pref2:UploadSongResponse"></element>
+  <element name="DeleteSongCallback" type="pref2:DeleteSongResponse"></element>
 </schema>]]></con:content>
         <con:type>http://www.w3.org/2001/XMLSchema</con:type>
       </con:part>
@@ -2940,9 +3128,9 @@
     <con:endpoints>
       <con:endpoint>http://localhost:8080/ode/processes/UploadCallbackService</con:endpoint>
     </con:endpoints>
-    <con:operation id="723ab422-4598-401a-b79c-25986e9ffba6" isOneWay="false" action="http://www.example.org/UploadCallbackService/DeleteSong" name="DeleteSongCallback" bindingOperationName="DeleteSongCallback" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
+    <con:operation id="a5e6cba4-8424-4231-8c92-70c88e3a0c07" isOneWay="false" action="http://www.example.org/UploadCallbackService/DeleteSong" name="DeleteSongCallback" bindingOperationName="DeleteSongCallback" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
       <con:settings/>
-      <con:call id="0e5ae2a6-5467-4d53-a207-07c3cbd36fe7" name="Request 1">
+      <con:call id="d1a217dd-d404-46ce-a84e-852a725e64fa" name="Request 1">
         <con:settings/>
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>http://localhost:8080/ode/processes/UploadCallbackService</con:endpoint>
@@ -2950,9 +3138,12 @@
    <soapenv:Header/>\r
    <soapenv:Body>\r
       <upl:DeleteSongResponse>\r
-         <!--You have a CHOICE of the next 2 items at this level-->\r
-         <Successfull>?</Successfull>\r
-         <ErrorMessage>?</ErrorMessage>\r
+         <response>\r
+            <!--You have a CHOICE of the next 2 items at this level-->\r
+            <Successfull>?</Successfull>\r
+            <ErrorMessage>?</ErrorMessage>\r
+         </response>\r
+         <conversationId>?</conversationId>\r
       </upl:DeleteSongResponse>\r
    </soapenv:Body>\r
 </soapenv:Envelope>]]></con:request>
@@ -2963,9 +3154,9 @@
         <con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.example.org/UploadCallbackService/DeleteSong"/>
       </con:call>
     </con:operation>
-    <con:operation id="a9a02c46-c2f0-46bc-b1b7-4d4f86e6d39b" isOneWay="false" action="http://www.example.org/UploadCallbackService/UploadSong" name="UploadSongCallback" bindingOperationName="UploadSongCallback" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
+    <con:operation id="7d717956-e8fe-4683-82f2-8d6fc4150778" isOneWay="false" action="http://www.example.org/UploadCallbackService/UploadSong" name="UploadSongCallback" bindingOperationName="UploadSongCallback" type="One-Way" inputName="" sendsAttachments="false" anonymous="optional">
       <con:settings/>
-      <con:call id="614cde2a-1bd7-4ee4-ad4d-7c26349359be" name="Request 1">
+      <con:call id="0cfbcb0a-0c69-4a03-98d0-28183626e3a8" name="Request 1">
         <con:settings/>
         <con:encoding>UTF-8</con:encoding>
         <con:endpoint>http://localhost:8080/ode/processes/UploadCallbackService</con:endpoint>
@@ -2990,19 +3181,18 @@
       </con:call>
     </con:operation>
   </con:interface>
-  <con:testSuite id="e6764d3d-7cbb-42bb-b8fb-06980272d813" name="DistributedSoundScapeBinding TestSuite">
+  <con:testSuite id="28d3a076-3e4b-4d6f-b85d-3ec0cf7bc645" name="DistributedSoundScapeBinding TestSuite">
     <con:settings/>
-    <con:savedRecentRuns>1</con:savedRecentRuns>
     <con:runType>SEQUENTIAL</con:runType>
-    <con:testCase id="85f30788-a0e2-45a0-a652-2f59ab53d59c" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="AddSpeakerFunction TestCase" searchProperties="true" timeout="0">
+    <con:testCase id="f7eb9a33-b049-43c1-b381-49ad401cdd90" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="AddSpeakerFunction TestCase" searchProperties="true" timeout="0">
       <con:settings/>
       <con:savedRecentRuns>1</con:savedRecentRuns>
-      <con:testStep type="request" id="66cb0f7b-8a69-4b7d-993c-c79a7c669cb4" name="AddSpeakerFunction">
+      <con:testStep type="request" id="87fa253f-a494-439d-aa20-09bf9e9ca63a" name="AddSpeakerFunction">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>DistributedSoundScapeBinding</con:interface>
           <con:operation>AddSpeakerFunction</con:operation>
-          <con:request name="AddSpeakerFunction" id="6c7ef2b5-9914-4b4f-936b-a68dd77c43d1">
+          <con:request name="AddSpeakerFunction" id="155b7c5e-3648-4287-9563-3406700f423e">
             <con:settings/>
             <con:encoding>UTF-8</con:encoding>
             <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -3036,7 +3226,7 @@
           </con:request>
         </con:config>
       </con:testStep>
-      <con:loadTest id="841798ea-91d0-40db-877a-2ab53fc966f4" name="LoadTest AddSpeakerFunction">
+      <con:loadTest id="dd4c4e95-eb4a-42f8-ae1c-f53d68db4086" name="LoadTest AddSpeakerFunction">
         <con:settings>
           <con:setting id="HttpSettings@close-connections">false</con:setting>
         </con:settings>
@@ -3060,14 +3250,14 @@
       <con:properties/>
       <con:reportParameters/>
     </con:testCase>
-    <con:testCase id="ff48725a-cd32-4f86-a606-7d9f78b924d9" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="DeleteSongFunction TestCase" searchProperties="true" timeout="0">
+    <con:testCase id="20b9c2ed-d142-4eb5-96a9-4e3c001ba406" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="DeleteSongFunction TestCase" searchProperties="true" timeout="0">
       <con:settings/>
-      <con:testStep type="request" id="bee1e981-c56d-415c-9709-b5ef5b36ee70" name="DeleteSongFunction">
+      <con:testStep type="request" id="8e2bf886-a6fb-41f3-b47c-6470ecdf0242" name="DeleteSongFunction">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>DistributedSoundScapeBinding</con:interface>
           <con:operation>DeleteSongFunction</con:operation>
-          <con:request name="DeleteSongFunction" id="56dc4c69-e3c8-4020-acf2-ae10eed568e6">
+          <con:request name="DeleteSongFunction" id="bdb81a11-7ddf-457b-ba09-8ed3ed154d6f">
             <con:settings/>
             <con:encoding>UTF-8</con:encoding>
             <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -3106,7 +3296,7 @@
           </con:request>
         </con:config>
       </con:testStep>
-      <con:loadTest id="33782c2b-92c5-4e68-8408-4cb5e81aa141" name="LoadTest DeleteSongFunction">
+      <con:loadTest id="b6fd4a92-ea23-4d69-b92f-3ef2705c6006" name="LoadTest DeleteSongFunction">
         <con:settings>
           <con:setting id="HttpSettings@close-connections">false</con:setting>
         </con:settings>
@@ -3130,14 +3320,14 @@
       <con:properties/>
       <con:reportParameters/>
     </con:testCase>
-    <con:testCase id="d0b75ce7-e1bb-4de0-b329-26075ce74945" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="finishFunction TestCase" searchProperties="true" timeout="0">
+    <con:testCase id="9251441d-ed7f-446f-b0f1-e4f2070fdbfb" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="finishFunction TestCase" searchProperties="true" timeout="0">
       <con:settings/>
-      <con:testStep type="request" id="59e24046-3196-436c-bfdf-bb1a9c5db146" name="finishFunction">
+      <con:testStep type="request" id="b44de1fd-c234-4da4-a686-eebe4997e722" name="finishFunction">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>DistributedSoundScapeBinding</con:interface>
           <con:operation>finishFunction</con:operation>
-          <con:request name="finishFunction" id="da17f135-4b29-46b4-b788-d5550678de2c">
+          <con:request name="finishFunction" id="98473fae-78ec-4ada-a7f6-ca736f7f3180">
             <con:settings/>
             <con:encoding>UTF-8</con:encoding>
             <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -3155,7 +3345,7 @@
           </con:request>
         </con:config>
       </con:testStep>
-      <con:loadTest id="2a53a3a7-fefc-4fd7-98a2-0637381b4307" name="LoadTest finishFunction">
+      <con:loadTest id="5c17ff5f-89f1-477d-ac3b-f5b466e2bb64" name="LoadTest finishFunction">
         <con:settings>
           <con:setting id="HttpSettings@close-connections">false</con:setting>
         </con:settings>
@@ -3179,14 +3369,14 @@
       <con:properties/>
       <con:reportParameters/>
     </con:testCase>
-    <con:testCase id="dfa8178b-fab5-488d-932d-cd6e7bd57bc7" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="IsSongLoadedFunction TestCase" searchProperties="true" timeout="0">
+    <con:testCase id="3e13efc8-19f6-4a2c-9662-b85ac9521ea6" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="IsSongLoadedFunction TestCase" searchProperties="true" timeout="0">
       <con:settings/>
-      <con:testStep type="request" id="8a482ecc-eb78-418a-9c4b-61059b098d68" name="IsSongLoadedFunction">
+      <con:testStep type="request" id="ed7237f4-5f37-48a3-9554-90e839536851" name="IsSongLoadedFunction">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>DistributedSoundScapeBinding</con:interface>
           <con:operation>IsSongLoadedFunction</con:operation>
-          <con:request name="IsSongLoadedFunction" id="931a0466-8ee7-4c07-a280-80485f2f7d49">
+          <con:request name="IsSongLoadedFunction" id="6e9cfa90-5073-4df2-91bc-d15162aad16d">
             <con:settings/>
             <con:encoding>UTF-8</con:encoding>
             <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -3225,7 +3415,7 @@
           </con:request>
         </con:config>
       </con:testStep>
-      <con:loadTest id="e18cf1fb-d701-4484-808d-0863205d7a36" name="LoadTest IsSongLoadedFunction">
+      <con:loadTest id="a1d8eda7-e867-460b-b1c5-fdab063d258b" name="LoadTest IsSongLoadedFunction">
         <con:settings>
           <con:setting id="HttpSettings@close-connections">false</con:setting>
         </con:settings>
@@ -3249,14 +3439,14 @@
       <con:properties/>
       <con:reportParameters/>
     </con:testCase>
-    <con:testCase id="0396166d-ce1e-4a44-858f-1c5f4a83b5a2" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ProcessPlaybackCommandFunction TestCase" searchProperties="true" timeout="0">
+    <con:testCase id="251baa66-85fa-4c0e-8f6c-3c73f42a6c6d" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="ProcessPlaybackCommandFunction TestCase" searchProperties="true" timeout="0">
       <con:settings/>
-      <con:testStep type="request" id="4a6dff98-32d3-46d7-993b-37314aecbf21" name="ProcessPlaybackCommandFunction">
+      <con:testStep type="request" id="f4d64f66-2e6b-443a-801d-aa14d2769cfc" name="ProcessPlaybackCommandFunction">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>DistributedSoundScapeBinding</con:interface>
           <con:operation>ProcessPlaybackCommandFunction</con:operation>
-          <con:request name="ProcessPlaybackCommandFunction" id="70cac299-b93c-4ef6-968e-6cb8fd280784">
+          <con:request name="ProcessPlaybackCommandFunction" id="551cbce5-9461-4d4b-b0ea-ba3542d8fef3">
             <con:settings/>
             <con:encoding>UTF-8</con:encoding>
             <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -3294,7 +3484,7 @@
           </con:request>
         </con:config>
       </con:testStep>
-      <con:loadTest id="6f426b0c-6116-4966-9948-88614a69edea" name="LoadTest ProcessPlaybackCommandFunction">
+      <con:loadTest id="089702f4-5b64-4403-abd9-c4772a6d6bae" name="LoadTest ProcessPlaybackCommandFunction">
         <con:settings>
           <con:setting id="HttpSettings@close-connections">false</con:setting>
         </con:settings>
@@ -3318,15 +3508,14 @@
       <con:properties/>
       <con:reportParameters/>
     </con:testCase>
-    <con:testCase id="11855507-243b-4731-9867-5cf318166410" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RegisterUserFunction TestCase" searchProperties="true" timeout="0">
+    <con:testCase id="d5c37c84-1776-4d95-99f2-78227ff07c88" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RegisterUserFunction TestCase" searchProperties="true" timeout="0">
       <con:settings/>
-      <con:savedRecentRuns>1</con:savedRecentRuns>
-      <con:testStep type="request" id="b4b2afdf-82ad-4020-8372-a8e4e0ec0f3f" name="RegisterUserFunction">
+      <con:testStep type="request" id="8e1fa699-ac04-49f8-8a0a-4cbef2d481fe" name="RegisterUserFunction">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>DistributedSoundScapeBinding</con:interface>
           <con:operation>RegisterUserFunction</con:operation>
-          <con:request name="RegisterUserFunction" id="7247b5d2-800e-4a2a-bcec-b249da53af97">
+          <con:request name="RegisterUserFunction" id="8702e964-b0d9-4e44-a077-b0307b33f780">
             <con:settings/>
             <con:encoding>UTF-8</con:encoding>
             <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -3350,7 +3539,7 @@
           </con:request>
         </con:config>
       </con:testStep>
-      <con:loadTest id="cf796e9d-e00f-4cd2-987f-0f43ad8f8ebf" name="LoadTest RegisterUserFunction">
+      <con:loadTest id="149d7f0f-6cf7-4e57-8940-319b63fc69b1" name="LoadTest RegisterUserFunction">
         <con:settings>
           <con:setting id="HttpSettings@close-connections">false</con:setting>
         </con:settings>
@@ -3374,14 +3563,14 @@
       <con:properties/>
       <con:reportParameters/>
     </con:testCase>
-    <con:testCase id="db496a44-eeee-4f01-9138-9f0de330fddb" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RemoveSpeakerFunction TestCase" searchProperties="true" timeout="0">
+    <con:testCase id="ee0b3439-2c83-4ed2-95fb-00ab275b0225" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="RemoveSpeakerFunction TestCase" searchProperties="true" timeout="0">
       <con:settings/>
-      <con:testStep type="request" id="6dc18d8d-ad17-4067-b117-611c948920b6" name="RemoveSpeakerFunction">
+      <con:testStep type="request" id="7b16eafd-dc90-4e02-908e-c1bd74bfab05" name="RemoveSpeakerFunction">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>DistributedSoundScapeBinding</con:interface>
           <con:operation>RemoveSpeakerFunction</con:operation>
-          <con:request name="RemoveSpeakerFunction" id="c8b74847-c9e7-4620-bc23-306dd0fa22aa">
+          <con:request name="RemoveSpeakerFunction" id="318ddea7-a943-41ba-8f95-0be5e21ad3e4">
             <con:settings/>
             <con:encoding>UTF-8</con:encoding>
             <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -3408,7 +3597,7 @@
           </con:request>
         </con:config>
       </con:testStep>
-      <con:loadTest id="0abc964c-a14f-45d5-b0b2-0f097e6c1f11" name="LoadTest RemoveSpeakerFunction">
+      <con:loadTest id="554b32bd-b0a0-4844-bae2-16f6df38eb6b" name="LoadTest RemoveSpeakerFunction">
         <con:settings>
           <con:setting id="HttpSettings@close-connections">false</con:setting>
         </con:settings>
@@ -3432,14 +3621,14 @@
       <con:properties/>
       <con:reportParameters/>
     </con:testCase>
-    <con:testCase id="c28fdd1c-379e-40f1-802c-27e17c6a8f97" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="SetSoundScapeSourceLayoutFunction TestCase" searchProperties="true" timeout="0">
+    <con:testCase id="310aebd5-e521-4cee-859d-25a5741df381" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="SetSoundScapeSourceLayoutFunction TestCase" searchProperties="true" timeout="0">
       <con:settings/>
-      <con:testStep type="request" id="dd795c83-bb55-404d-8bb4-5704c3974282" name="SetSoundScapeSourceLayoutFunction">
+      <con:testStep type="request" id="a5960665-c70a-452d-831f-de6d1b7e7890" name="SetSoundScapeSourceLayoutFunction">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>DistributedSoundScapeBinding</con:interface>
           <con:operation>SetSoundScapeSourceLayoutFunction</con:operation>
-          <con:request name="SetSoundScapeSourceLayoutFunction" id="e26b0a6e-d068-4dcc-8fe4-4249f13ccde3">
+          <con:request name="SetSoundScapeSourceLayoutFunction" id="25f6b3df-77d3-4fc4-b538-e7a69929c2e8">
             <con:settings/>
             <con:encoding>UTF-8</con:encoding>
             <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -3488,7 +3677,7 @@
           </con:request>
         </con:config>
       </con:testStep>
-      <con:loadTest id="a19e56df-2a16-4041-b428-9be477f4b254" name="LoadTest SetSoundScapeSourceLayoutFunction">
+      <con:loadTest id="b9cb9dc8-85af-4cca-9e47-cbfcc695ca4b" name="LoadTest SetSoundScapeSourceLayoutFunction">
         <con:settings>
           <con:setting id="HttpSettings@close-connections">false</con:setting>
         </con:settings>
@@ -3512,14 +3701,14 @@
       <con:properties/>
       <con:reportParameters/>
     </con:testCase>
-    <con:testCase id="a2a89deb-3613-4868-b0dd-ef8590deff2b" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="stopFunction TestCase" searchProperties="true" timeout="0">
+    <con:testCase id="d31a2ab7-d50c-42a6-9e24-339c2cf4c5a4" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="stopFunction TestCase" searchProperties="true" timeout="0">
       <con:settings/>
-      <con:testStep type="request" id="4eca4439-4703-47af-9382-e0d2c352f3a9" name="stopFunction">
+      <con:testStep type="request" id="74eebb2e-106e-4b26-8203-3d8477e2d3ee" name="stopFunction">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>DistributedSoundScapeBinding</con:interface>
           <con:operation>stopFunction</con:operation>
-          <con:request name="stopFunction" id="c3df229a-53ec-4ae8-a6c7-44d7964a3e2c">
+          <con:request name="stopFunction" id="42db6a78-ca2a-4279-82ec-cc63aeb7d9dd">
             <con:settings/>
             <con:encoding>UTF-8</con:encoding>
             <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -3537,7 +3726,7 @@
           </con:request>
         </con:config>
       </con:testStep>
-      <con:loadTest id="47d7d3cc-c002-46d6-b4f0-2f8fa05ef3ad" name="LoadTest stopFunction">
+      <con:loadTest id="cc340db7-278e-4cd8-8817-ead27cbbd620" name="LoadTest stopFunction">
         <con:settings>
           <con:setting id="HttpSettings@close-connections">false</con:setting>
         </con:settings>
@@ -3561,14 +3750,14 @@
       <con:properties/>
       <con:reportParameters/>
     </con:testCase>
-    <con:testCase id="1007cea2-adf6-48f2-b9d6-2929e59e1811" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UploadSongFunction TestCase" searchProperties="true" timeout="0">
+    <con:testCase id="f91dd7f3-d1ed-4820-bce5-8fa599a8edab" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UploadSongFunction TestCase" searchProperties="true" timeout="0">
       <con:settings/>
-      <con:testStep type="request" id="38a41c4a-90d3-45d6-a46d-4143a0798577" name="UploadSongFunction">
+      <con:testStep type="request" id="67ed1112-ae71-40f9-8b07-046dbe90bf91" name="UploadSongFunction">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>DistributedSoundScapeBinding</con:interface>
           <con:operation>UploadSongFunction</con:operation>
-          <con:request name="UploadSongFunction" id="b14fea38-90df-4174-8854-243d8221cedf">
+          <con:request name="UploadSongFunction" id="7e435929-6307-4f26-9322-0f4ac2489275">
             <con:settings/>
             <con:encoding>UTF-8</con:encoding>
             <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
@@ -3607,7 +3796,7 @@
           </con:request>
         </con:config>
       </con:testStep>
-      <con:loadTest id="852c7b27-a0a3-4443-8530-6c54f1d4f8a0" name="LoadTest UploadSongFunction">
+      <con:loadTest id="7e699ee3-a12b-43b2-963e-94a397913b08" name="LoadTest UploadSongFunction">
         <con:settings>
           <con:setting id="HttpSettings@close-connections">false</con:setting>
         </con:settings>
@@ -3634,18 +3823,17 @@
     <con:properties/>
     <con:reportParameters/>
   </con:testSuite>
-  <con:testSuite id="8ddc51b3-5bee-42dd-a396-f01c6993b7c7" name="UploadServiceSOAP TestSuite">
+  <con:testSuite id="8be5e864-fb07-4c30-92c9-428bb03e1847" name="UploadServiceSOAP TestSuite">
     <con:settings/>
-    <con:savedRecentRuns>1</con:savedRecentRuns>
     <con:runType>SEQUENTIAL</con:runType>
-    <con:testCase id="e0d5f8b0-2ddb-49de-be4d-7ce4a50f67d7" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="DeleteSong TestCase" searchProperties="true" timeout="0">
+    <con:testCase id="f057d06b-1140-42ab-a902-7c6090a60a64" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="DeleteSong TestCase" searchProperties="true" timeout="0">
       <con:settings/>
-      <con:testStep type="request" id="ede13168-e962-49b3-95f1-d394b7815454" name="DeleteSong">
+      <con:testStep type="request" id="394a44f9-64a9-4bb1-bb31-7929652475f6" name="DeleteSong">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>UploadServiceSOAP</con:interface>
           <con:operation>DeleteSong</con:operation>
-          <con:request name="DeleteSong" id="b2db2e83-9db9-4c9e-86b5-9132e260b9cd">
+          <con:request name="DeleteSong" id="5468b800-ad10-419a-9190-9de8b1e0d8f7">
             <con:settings/>
             <con:encoding>UTF-8</con:encoding>
             <con:endpoint>http://localhost:9080/DistributedSoundScape/services/UploadService/</con:endpoint>
@@ -3683,7 +3871,7 @@
           </con:request>
         </con:config>
       </con:testStep>
-      <con:loadTest id="328615b5-7494-400a-b8b8-8c748534ce9f" name="LoadTest DeleteSong">
+      <con:loadTest id="348e3b04-8c44-4e36-8947-3e0688673762" name="LoadTest DeleteSong">
         <con:settings>
           <con:setting id="HttpSettings@close-connections">false</con:setting>
         </con:settings>
@@ -3707,14 +3895,14 @@
       <con:properties/>
       <con:reportParameters/>
     </con:testCase>
-    <con:testCase id="8a3c2a16-81cc-425e-bb1b-b55476b9721e" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="IsSongLoaded TestCase" searchProperties="true" timeout="0">
+    <con:testCase id="eb75e345-23f7-4a29-8f64-e001ff17f2a8" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="IsSongLoaded TestCase" searchProperties="true" timeout="0">
       <con:settings/>
-      <con:testStep type="request" id="9c2ffcb8-544a-4d4d-9859-bf8d53744b9c" name="IsSongLoaded">
+      <con:testStep type="request" id="b2003746-f610-47ac-a922-0e15f051b1a3" name="IsSongLoaded">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>UploadServiceSOAP</con:interface>
           <con:operation>IsSongLoaded</con:operation>
-          <con:request name="IsSongLoaded" id="21be7609-3e8f-46d1-825b-9df551e4c468">
+          <con:request name="IsSongLoaded" id="3021f191-984b-45e6-a918-3b44b2296d35">
             <con:settings/>
             <con:encoding>UTF-8</con:encoding>
             <con:endpoint>http://localhost:9080/DistributedSoundScape/services/UploadService/</con:endpoint>
@@ -3752,7 +3940,7 @@
           </con:request>
         </con:config>
       </con:testStep>
-      <con:loadTest id="d03edb63-49b3-4cb7-a4ad-11acc819534e" name="LoadTest IsSongLoaded">
+      <con:loadTest id="98975107-718f-41d6-a786-549d572b6c00" name="LoadTest IsSongLoaded">
         <con:settings>
           <con:setting id="HttpSettings@close-connections">false</con:setting>
         </con:settings>
@@ -3776,14 +3964,14 @@
       <con:properties/>
       <con:reportParameters/>
     </con:testCase>
-    <con:testCase id="b6868f7b-30a0-44ec-8b79-df5c27122ff1" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UploadSong TestCase" searchProperties="true" timeout="0">
+    <con:testCase id="818b5ab4-625d-4a7a-88e0-53ace64f16c7" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UploadSong TestCase" searchProperties="true" timeout="0">
       <con:settings/>
-      <con:testStep type="request" id="0f021b15-b757-46bd-9006-ab2d32533f17" name="UploadSong">
+      <con:testStep type="request" id="161c3d13-8c43-4b4e-a5e6-d573916915f7" name="UploadSong">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>UploadServiceSOAP</con:interface>
           <con:operation>UploadSong</con:operation>
-          <con:request name="UploadSong" id="e314f945-6a7e-496f-b775-f9e23a7b3131">
+          <con:request name="UploadSong" id="81f04673-989c-4627-a629-956b2f86a251">
             <con:settings/>
             <con:encoding>UTF-8</con:encoding>
             <con:endpoint>http://localhost:9080/DistributedSoundScape/services/UploadService/</con:endpoint>
@@ -3822,7 +4010,7 @@
           </con:request>
         </con:config>
       </con:testStep>
-      <con:loadTest id="c61a0412-01f8-45fd-b324-f61c2f4a0e13" name="LoadTest UploadSong">
+      <con:loadTest id="07a7bf09-3759-40d6-8a20-7636be00fa35" name="LoadTest UploadSong">
         <con:settings>
           <con:setting id="HttpSettings@close-connections">false</con:setting>
         </con:settings>
@@ -3849,19 +4037,73 @@
     <con:properties/>
     <con:reportParameters/>
   </con:testSuite>
-  <con:testSuite id="744d51a4-ba5c-4cc5-baef-495732b8f4b7" name="DistributedSoundScapeCallbackBinding TestSuite">
+  <con:testSuite id="85d0db31-1eba-4bc9-bcfb-e2e4c5dc883c" name="DistributedSoundScapeCallbackBinding TestSuite">
     <con:settings/>
-    <con:savedRecentRuns>1</con:savedRecentRuns>
     <con:runType>SEQUENTIAL</con:runType>
-    <con:testCase id="72027f3a-51a7-4fa9-be50-782764d8981d" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="requestFunction TestCase" searchProperties="true" timeout="0">
+    <con:testCase id="35ce6a7b-acb6-4407-8fcc-03adde3acad8" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="deleteSongCallbackFunction TestCase" searchProperties="true" timeout="0">
       <con:settings/>
-      <con:savedRecentRuns>1</con:savedRecentRuns>
-      <con:testStep type="request" id="2018b721-ff10-4b71-a6e8-ab6d9cfb85df" name="requestFunction">
+      <con:testStep type="request" id="c8307b5c-6c11-4473-8c07-cc4ff93fde16" name="deleteSongCallbackFunction">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>deleteSongCallbackFunction</con:operation>
+          <con:request name="deleteSongCallbackFunction" id="7182e954-aad5-45a7-b39a-f2e93dc185cc">
+            <con:settings/>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://localhost:8182/onResult</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://www.example.org/OrchestratorElements/">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <orc:DeleteSongCallback>\r
+         <response>\r
+            <!--You have a CHOICE of the next 2 items at this level-->\r
+            <Successfull>?</Successfull>\r
+            <ErrorMessage>?</ErrorMessage>\r
+         </response>\r
+         <conversationId>?</conversationId>\r
+      </orc:DeleteSongCallback>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request>
+            <con:credentials>
+              <con:selectedAuthProfile>Inherit From Parent</con:selectedAuthProfile>
+              <con:authType>No Authorization</con:authType>
+            </con:credentials>
+            <con:wsaConfig action="DistributedSoundScape/deleteSongCallbackFunction"/>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:loadTest id="7b036f67-735b-4aed-8be8-95cc0038b87e" name="LoadTest deleteSongCallbackFunction">
+        <con:settings>
+          <con:setting id="HttpSettings@close-connections">false</con:setting>
+        </con:settings>
+        <con:threadCount>5</con:threadCount>
+        <con:startDelay>0</con:startDelay>
+        <con:sampleInterval>250</con:sampleInterval>
+        <con:calculateTPSOnTimePassed>true</con:calculateTPSOnTimePassed>
+        <con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange>
+        <con:historyLimit>-1</con:historyLimit>
+        <con:testLimit>60</con:testLimit>
+        <con:limitType>TIME</con:limitType>
+        <con:loadStrategy>
+          <con:type>Simple</con:type>
+        </con:loadStrategy>
+        <con:assertion type="Step Status" name="Step Status"/>
+        <con:maxAssertionErrors>100</con:maxAssertionErrors>
+        <con:cancelExcessiveThreads>true</con:cancelExcessiveThreads>
+        <con:strategyInterval>500</con:strategyInterval>
+        <con:reportParameters/>
+      </con:loadTest>
+      <con:properties/>
+      <con:reportParameters/>
+    </con:testCase>
+    <con:testCase id="3c763f8e-04d8-40a7-b08a-b3de9c7055e2" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="requestFunction TestCase" searchProperties="true" timeout="0">
+      <con:settings/>
+      <con:testStep type="request" id="ebcd61c1-9ffa-4915-98b9-308e7561eedc" name="requestFunction">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
           <con:operation>requestFunction</con:operation>
-          <con:request name="requestFunction" id="f4d06328-e97f-4907-8394-ee9bbb8c2689">
+          <con:request name="requestFunction" id="a00c5f21-c378-4000-811e-3dca6e63f9de">
             <con:settings/>
             <con:encoding>UTF-8</con:encoding>
             <con:endpoint>http://localhost:8182/onResult</con:endpoint>
@@ -3879,7 +4121,63 @@
           </con:request>
         </con:config>
       </con:testStep>
-      <con:loadTest id="3487fdd4-7bbf-4895-a4cb-a9540165a601" name="LoadTest requestFunction">
+      <con:loadTest id="ec12ad9f-7dce-48fb-8345-e42d09285771" name="LoadTest requestFunction">
+        <con:settings>
+          <con:setting id="HttpSettings@close-connections">false</con:setting>
+        </con:settings>
+        <con:threadCount>5</con:threadCount>
+        <con:startDelay>0</con:startDelay>
+        <con:sampleInterval>250</con:sampleInterval>
+        <con:calculateTPSOnTimePassed>true</con:calculateTPSOnTimePassed>
+        <con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange>
+        <con:historyLimit>-1</con:historyLimit>
+        <con:testLimit>60</con:testLimit>
+        <con:limitType>TIME</con:limitType>
+        <con:loadStrategy>
+          <con:type>Simple</con:type>
+        </con:loadStrategy>
+        <con:assertion type="Step Status" name="Step Status"/>
+        <con:maxAssertionErrors>100</con:maxAssertionErrors>
+        <con:cancelExcessiveThreads>true</con:cancelExcessiveThreads>
+        <con:strategyInterval>500</con:strategyInterval>
+        <con:reportParameters/>
+      </con:loadTest>
+      <con:properties/>
+      <con:reportParameters/>
+    </con:testCase>
+    <con:testCase id="03111f9a-8a04-4e7b-90b3-37be901578be" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="uploadSongCallbackFunction TestCase" searchProperties="true" timeout="0">
+      <con:settings/>
+      <con:testStep type="request" id="2b7dc088-89d4-4d5b-b51c-4739ecd4a3ae" name="uploadSongCallbackFunction">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>uploadSongCallbackFunction</con:operation>
+          <con:request name="uploadSongCallbackFunction" id="3634e1e8-5e52-4722-881e-d9c423ab6299">
+            <con:settings/>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://localhost:8182/onResult</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://www.example.org/OrchestratorElements/">\r
+   <soapenv:Header/>\r
+   <soapenv:Body>\r
+      <orc:UploadSongCallback>\r
+         <conversationId>?</conversationId>\r
+         <response>\r
+            <!--You have a CHOICE of the next 2 items at this level-->\r
+            <Successfull>?</Successfull>\r
+            <ErrorMessage>?</ErrorMessage>\r
+         </response>\r
+      </orc:UploadSongCallback>\r
+   </soapenv:Body>\r
+</soapenv:Envelope>]]></con:request>
+            <con:credentials>
+              <con:selectedAuthProfile>Inherit From Parent</con:selectedAuthProfile>
+              <con:authType>No Authorization</con:authType>
+            </con:credentials>
+            <con:wsaConfig action="DistributedSoundScape/uploadSongCallbackFunction"/>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:loadTest id="f2163e1e-8913-4550-b0ac-893f42645100" name="LoadTest uploadSongCallbackFunction">
         <con:settings>
           <con:setting id="HttpSettings@close-connections">false</con:setting>
         </con:settings>
@@ -3906,17 +4204,17 @@
     <con:properties/>
     <con:reportParameters/>
   </con:testSuite>
-  <con:testSuite id="6d1d46c5-9ab5-4d65-be6b-f36f80f29a70" name="UploadCallbackServiceSOAP TestSuite">
+  <con:testSuite id="4e1044c6-d8cd-4244-9f66-f2aa436fdb28" name="UploadCallbackServiceSOAP TestSuite">
     <con:settings/>
     <con:runType>SEQUENTIAL</con:runType>
-    <con:testCase id="fcd6fc3a-1228-481a-a8ce-2c31ef62c871" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="DeleteSongCallback TestCase" searchProperties="true" timeout="0">
+    <con:testCase id="b799d81d-4ba6-438f-ab0e-86489ef67f3e" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="DeleteSongCallback TestCase" searchProperties="true" timeout="0">
       <con:settings/>
-      <con:testStep type="request" id="985a681e-188d-4fd7-81ec-dd3eb92fd024" name="DeleteSongCallback">
+      <con:testStep type="request" id="d132f6d2-91a1-48b1-80e1-d95ea4870344" name="DeleteSongCallback">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>UploadCallbackServiceSOAP</con:interface>
           <con:operation>DeleteSongCallback</con:operation>
-          <con:request name="DeleteSongCallback" id="49e6242d-87f2-4fe0-a566-e9e2df5c5add">
+          <con:request name="DeleteSongCallback" id="e7c6fedd-dc21-477f-968b-1cd2bddce868">
             <con:settings/>
             <con:encoding>UTF-8</con:encoding>
             <con:endpoint>http://localhost:8080/ode/processes/UploadCallbackService</con:endpoint>
@@ -3924,9 +4222,12 @@
    <soapenv:Header/>\r
    <soapenv:Body>\r
       <upl:DeleteSongResponse>\r
-         <!--You have a CHOICE of the next 2 items at this level-->\r
-         <Successfull>?</Successfull>\r
-         <ErrorMessage>?</ErrorMessage>\r
+         <response>\r
+            <!--You have a CHOICE of the next 2 items at this level-->\r
+            <Successfull>?</Successfull>\r
+            <ErrorMessage>?</ErrorMessage>\r
+         </response>\r
+         <conversationId>?</conversationId>\r
       </upl:DeleteSongResponse>\r
    </soapenv:Body>\r
 </soapenv:Envelope>]]></con:request>
@@ -3938,7 +4239,7 @@
           </con:request>
         </con:config>
       </con:testStep>
-      <con:loadTest id="3569b8ea-b30e-4a47-af82-853cd760326d" name="LoadTest DeleteSongCallback">
+      <con:loadTest id="60750aeb-dab5-49d5-a55c-a325f172daed" name="LoadTest DeleteSongCallback">
         <con:settings>
           <con:setting id="HttpSettings@close-connections">false</con:setting>
         </con:settings>
@@ -3962,14 +4263,14 @@
       <con:properties/>
       <con:reportParameters/>
     </con:testCase>
-    <con:testCase id="c7a86d73-bbe4-49ba-a101-0ee022581286" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UploadSongCallback TestCase" searchProperties="true" timeout="0">
+    <con:testCase id="f4fc144a-bb6a-4a8b-93e5-1caf3512d50a" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UploadSongCallback TestCase" searchProperties="true" timeout="0">
       <con:settings/>
-      <con:testStep type="request" id="fca7083b-981e-49c2-a691-6d197184c5b9" name="UploadSongCallback">
+      <con:testStep type="request" id="16efc319-d78c-4215-b342-277744021ae4" name="UploadSongCallback">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>UploadCallbackServiceSOAP</con:interface>
           <con:operation>UploadSongCallback</con:operation>
-          <con:request name="UploadSongCallback" id="03594c00-955f-4640-818b-63f744e91ca2">
+          <con:request name="UploadSongCallback" id="9410b88a-65c2-4603-a22f-726ba07d2b5f">
             <con:settings/>
             <con:encoding>UTF-8</con:encoding>
             <con:endpoint>http://localhost:8080/ode/processes/UploadCallbackService</con:endpoint>
@@ -3994,7 +4295,7 @@
           </con:request>
         </con:config>
       </con:testStep>
-      <con:loadTest id="e65ada43-e589-48be-b2dc-0496076a8da9" name="LoadTest UploadSongCallback">
+      <con:loadTest id="dab42bec-4e41-4c68-a13c-4868755f62ac" name="LoadTest UploadSongCallback">
         <con:settings>
           <con:setting id="HttpSettings@close-connections">false</con:setting>
         </con:settings>
@@ -4021,19 +4322,30 @@
     <con:properties/>
     <con:reportParameters/>
   </con:testSuite>
-  <con:testSuite id="005a26c8-c699-4173-867c-c74323bc601f" name="IntegrationTest">
+  <con:testSuite id="bb66fbba-1272-401f-b33f-ff4a1ffb125e" name="IntegrationTest">
     <con:settings/>
     <con:savedRecentRuns>1</con:savedRecentRuns>
     <con:runType>SEQUENTIAL</con:runType>
-    <con:testCase id="32836b6b-decb-492d-9201-6aaf26bc0662" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Basic" searchProperties="true" timeout="0">
+    <con:testCase id="200ffabc-d7fe-4953-ae5c-dd59b63fa0d6" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UploadSong" searchProperties="true" timeout="0">
       <con:settings/>
       <con:savedRecentRuns>1</con:savedRecentRuns>
-      <con:testStep type="request" name="RegisterUser" id="87c49cb1-c8eb-40a8-8ea7-8efaaa80dab9">
+      <con:testStep type="properties" name="" id="37055c9d-8f0b-4ce6-93c1-b8e4f2bab005">
+        <con:settings/>
+        <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:properties>
+            <con:property>
+              <con:name>conversationId</con:name>
+              <con:value>0</con:value>
+            </con:property>
+          </con:properties>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="request" name="RegisterUser" id="220bcabe-f9c7-4e15-9451-02d699d8f835">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>DistributedSoundScapeBinding</con:interface>
           <con:operation>RegisterUserFunction</con:operation>
-          <con:request name="RegisterUser" id="96378a09-e871-41d7-af25-1b6807e4642d">
+          <con:request name="RegisterUser" id="ab84a1a1-9aa9-4cc7-93d0-df45384c7d63">
             <con:settings>
               <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
             </con:settings>
@@ -4044,9 +4356,9 @@
    <soapenv:Body>
       <reg:RegisterUserRequest>
          <User>
-            <IpAddress>0.0.0.5</IpAddress>
-            <Port>56</Port>
-            <SoundScapeId>5</SoundScapeId>
+            <IpAddress>0.0.0.0</IpAddress>
+            <Port>1</Port>
+            <SoundScapeId>1</SoundScapeId>
          </User>
       </reg:RegisterUserRequest>
    </soapenv:Body>
@@ -4061,45 +4373,43 @@
           </con:request>
         </con:config>
       </con:testStep>
-      <con:testStep type="mockresponse" name="RequestFunction" id="288f743b-dda8-41d1-b768-730257aef3f9">
+      <con:testStep type="mockresponse" name="functionRequest1" id="75c9d61f-216f-4a92-9647-b36921087bab">
         <con:settings/>
         <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
           <con:operation>requestFunction</con:operation>
           <con:path>/onResult</con:path>
           <con:port>8182</con:port>
-          <con:response id="3f5f37c4-52b3-44e2-a6b0-9d28b0571b91">
+          <con:response id="91705251-f0bf-41b9-a262-e31ffc0577e0">
             <con:settings/>
             <con:responseContent xsi:nil="true"/>
             <con:wsaConfig mustUnderstand="NONE" version="200508"/>
           </con:response>
         </con:config>
       </con:testStep>
-      <con:testStep type="transfer" name="PropertyTransfer 1" id="bb7bb7d4-0a46-4f56-a3ec-1f4aacf15b3f">
+      <con:testStep type="transfer" name="PropertyTransfer 1" id="45f2d987-14aa-4c8a-a3b1-53a05c5f7ee3">
         <con:settings/>
         <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-          <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="true" entitize="true" transferChildNodes="false">
+          <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" transferToAll="true">
             <con:name>functionRequest</con:name>
-            <con:sourceType>Request</con:sourceType>
-            <con:sourceStep>RequestFunction</con:sourceStep>
+            <con:sourceType>Response</con:sourceType>
+            <con:sourceStep>functionRequest1</con:sourceStep>
             <con:sourcePath>declare namespace ns1='http://www.example.org/OrchestratorElements/';
 //ns1:functionRequest[1]</con:sourcePath>
-            <con:targetType>Request</con:targetType>
-            <con:targetStep>Stop</con:targetStep>
-            <con:targetPath>declare namespace orc='http://www.example.org/OrchestratorElements/';
-//orc:Stop[1]</con:targetPath>
+            <con:targetType>conversationId</con:targetType>
+            <con:targetStep/>
+            <con:targetPath/>
             <con:type>XPATH</con:type>
-            <con:targetTransferType>XPATH</con:targetTransferType>
             <con:upgraded>true</con:upgraded>
           </con:transfers>
         </con:config>
       </con:testStep>
-      <con:testStep type="request" name="Stop" id="d7ddd808-b66e-41a9-a2cd-1de0b5316fd8">
+      <con:testStep type="request" name="callUploadSong" id="ae9a35f3-edb6-4eb5-8111-7bc1afb1f3c1">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>DistributedSoundScapeBinding</con:interface>
-          <con:operation>stopFunction</con:operation>
-          <con:request name="Stop" id="dbeefac1-be9a-4cf0-86fb-41bab4258c55" timeout="">
+          <con:operation>UploadSongFunction</con:operation>
+          <con:request name="callUploadSong" id="331ccd6a-b6f3-468a-a2dc-0b3176435524">
             <con:settings>
               <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
             </con:settings>
@@ -4108,7 +4418,14 @@
             <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://www.example.org/OrchestratorElements/">
    <soapenv:Header/>
    <soapenv:Body>
-      <orc:Stop>w4aaa</orc:Stop>
+      <orc:CallUploadSong>
+         <Link>
+            <Type>http</Type>
+            <Address>fds</Address>
+         </Link>
+         <Speakers/>
+         <conversationId>w18aaa</conversationId>
+      </orc:CallUploadSong>
    </soapenv:Body>
 </soapenv:Envelope>]]></con:request>
             <con:credentials>
@@ -4121,94 +4438,59 @@
           </con:request>
         </con:config>
       </con:testStep>
-      <con:properties/>
-      <con:reportParameters/>
-      <con:breakPoints>
-        <con:testStepId>288f743b-dda8-41d1-b768-730257aef3f9</con:testStepId>
-        <con:status>NONE</con:status>
-        <con:properties/>
-      </con:breakPoints>
-      <con:breakPoints>
-        <con:testStepId>d7ddd808-b66e-41a9-a2cd-1de0b5316fd8</con:testStepId>
-        <con:status>NONE</con:status>
-        <con:properties/>
-      </con:breakPoints>
-    </con:testCase>
-    <con:testCase id="e2c7886a-1eb1-4d36-bbb8-735aff7e287a" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="UploadTest" searchProperties="true" timeout="0">
-      <con:settings/>
-      <con:savedRecentRuns>1</con:savedRecentRuns>
-      <con:testStep type="request" name="RegisterUser" id="fe2460c8-d692-432a-92f8-dead371ade3d">
-        <con:settings/>
-        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-          <con:interface>DistributedSoundScapeBinding</con:interface>
-          <con:operation>RegisterUserFunction</con:operation>
-          <con:request name="RegisterUser" id="96378a09-e871-41d7-af25-1b6807e4642d">
-            <con:settings>
-              <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-            </con:settings>
-            <con:encoding>UTF-8</con:encoding>
-            <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
-            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:reg="http://www.example.org/RegistrationServiceElements/">
-   <soapenv:Header/>
-   <soapenv:Body>
-      <reg:RegisterUserRequest>
-         <User>
-            <IpAddress>0.0.0.5</IpAddress>
-            <Port>56</Port>
-            <SoundScapeId>5</SoundScapeId>
-         </User>
-      </reg:RegisterUserRequest>
-   </soapenv:Body>
-</soapenv:Envelope>]]></con:request>
-            <con:credentials>
-              <con:selectedAuthProfile>Inherit From Parent</con:selectedAuthProfile>
-              <con:authType>No Authorization</con:authType>
-            </con:credentials>
-            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
-            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
-            <con:wsrmConfig version="1.2"/>
-          </con:request>
-        </con:config>
-      </con:testStep>
-      <con:testStep type="mockresponse" name="RequestFunction" id="3ae7c991-3b3f-49da-af4c-4286e1ebea4f">
+      <con:testStep type="mockresponse" name="receiveUploadSongCallback" id="1da4f6d8-f23f-4cca-8e0e-147cf6e44af3">
         <con:settings/>
         <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
-          <con:operation>requestFunction</con:operation>
+          <con:operation>uploadSongCallbackFunction</con:operation>
           <con:path>/onResult</con:path>
           <con:port>8182</con:port>
-          <con:response id="3f5f37c4-52b3-44e2-a6b0-9d28b0571b91">
+          <con:response id="e3fe87dd-2030-4d8e-843a-859f3f1423a5">
             <con:settings/>
             <con:responseContent xsi:nil="true"/>
             <con:wsaConfig mustUnderstand="NONE" version="200508"/>
           </con:response>
         </con:config>
       </con:testStep>
-      <con:testStep type="transfer" name="PropertyTransfer 1" id="91a44d41-fdfb-4d11-8f21-7b21a35929af">
+      <con:testStep type="mockresponse" name="functionRequest2" id="27c8b6e8-7dc8-4265-8bd9-70452755ee28">
+        <con:settings/>
+        <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>requestFunction</con:operation>
+          <con:path>/onResult</con:path>
+          <con:port>8182</con:port>
+          <con:response id="91705251-f0bf-41b9-a262-e31ffc0577e0">
+            <con:settings/>
+            <con:responseContent xsi:nil="true"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+          </con:response>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="transfer" name="PropertyTransfer 2" id="ee69974b-7436-4ad1-8a3b-baaf8c66fa82">
         <con:settings/>
         <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-          <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="true" entitize="true" transferChildNodes="false">
+          <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="true" entitize="false" transferChildNodes="false">
             <con:name>functionRequest</con:name>
             <con:sourceType>Request</con:sourceType>
-            <con:sourceStep>RequestFunction</con:sourceStep>
+            <con:sourceStep>functionRequest1</con:sourceStep>
             <con:sourcePath>declare namespace ns1='http://www.example.org/OrchestratorElements/';
 //ns1:functionRequest[1]</con:sourcePath>
             <con:targetType>Request</con:targetType>
-            <con:targetStep>Stop</con:targetStep>
+            <con:targetStep>callUploadSong</con:targetStep>
             <con:targetPath>declare namespace orc='http://www.example.org/OrchestratorElements/';
-//orc:Stop[1]</con:targetPath>
+//orc:CallUploadSong[1]/conversationId[1]</con:targetPath>
             <con:type>XPATH</con:type>
             <con:targetTransferType>XPATH</con:targetTransferType>
             <con:upgraded>true</con:upgraded>
           </con:transfers>
         </con:config>
       </con:testStep>
-      <con:testStep type="request" name="Stop" id="acf73b3b-77b2-4a8b-a1bb-4710ef759661">
+      <con:testStep type="request" name="stop" id="55151cfb-aca6-4080-9774-2dde19c4ec91">
         <con:settings/>
         <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
           <con:interface>DistributedSoundScapeBinding</con:interface>
           <con:operation>stopFunction</con:operation>
-          <con:request name="Stop" id="dbeefac1-be9a-4cf0-86fb-41bab4258c55" timeout="">
+          <con:request name="stop" id="df64cfd8-3b72-48e1-a4ed-f354bc486d8d">
             <con:settings>
               <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
             </con:settings>
@@ -4217,9 +4499,10 @@
             <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://www.example.org/OrchestratorElements/">
    <soapenv:Header/>
    <soapenv:Body>
-      <orc:Stop>w4aaa</orc:Stop>
+      <orc:Stop>w8aaa</orc:Stop>
    </soapenv:Body>
 </soapenv:Envelope>]]></con:request>
+            <con:assertion type="SOAP Response" id="ee6eb9d5-623d-4304-bfed-8ecb9eccf5d8"/>
             <con:credentials>
               <con:selectedAuthProfile>Inherit From Parent</con:selectedAuthProfile>
               <con:authType>No Authorization</con:authType>
@@ -4230,15 +4513,44 @@
           </con:request>
         </con:config>
       </con:testStep>
-      <con:properties/>
+      <con:properties>
+        <con:property>
+          <con:name>clientId</con:name>
+        </con:property>
+      </con:properties>
       <con:reportParameters/>
       <con:breakPoints>
-        <con:testStepId>288f743b-dda8-41d1-b768-730257aef3f9</con:testStepId>
+        <con:testStepId>27c8b6e8-7dc8-4265-8bd9-70452755ee28</con:testStepId>
         <con:status>NONE</con:status>
         <con:properties/>
       </con:breakPoints>
       <con:breakPoints>
-        <con:testStepId>d7ddd808-b66e-41a9-a2cd-1de0b5316fd8</con:testStepId>
+        <con:testStepId>55151cfb-aca6-4080-9774-2dde19c4ec91</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>220bcabe-f9c7-4e15-9451-02d699d8f835</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>ee69974b-7436-4ad1-8a3b-baaf8c66fa82</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>75c9d61f-216f-4a92-9647-b36921087bab</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>ae9a35f3-edb6-4eb5-8111-7bc1afb1f3c1</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>1da4f6d8-f23f-4cca-8e0e-147cf6e44af3</con:testStepId>
         <con:status>NONE</con:status>
         <con:properties/>
       </con:breakPoints>
