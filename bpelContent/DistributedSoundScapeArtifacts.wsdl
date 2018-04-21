@@ -18,6 +18,18 @@
     <vprop:query><![CDATA[/conversationId]]></vprop:query>
   </vprop:propertyAlias>
     <vprop:propertyAlias messageType="tns:stopRequest" part="stopRequest" propertyName="tns:conversationId"/>
+    <vprop:propertyAlias messageType="tns:AddSpeakerRequest" part="AddSpeakerRequest" propertyName="tns:conversationId">
+    <vprop:query><![CDATA[/conversationId]]></vprop:query>
+  </vprop:propertyAlias>
+    <vprop:propertyAlias messageType="tns:DeleteSongRequest" part="DeleteSongRequest" propertyName="tns:conversationId">
+    <vprop:query><![CDATA[/conversationId]]></vprop:query>
+  </vprop:propertyAlias>
+    <vprop:propertyAlias messageType="wsdl:DeleteSongResponse" part="Response" propertyName="tns:conversationId">
+    <vprop:query><![CDATA[/conversationId]]></vprop:query>
+  </vprop:propertyAlias>
+    <vprop:propertyAlias messageType="tns:DeleteSongRequest" part="DeleteSongRequest" propertyName="tns:conversationId">
+    <vprop:query><![CDATA[/conversationId]]></vprop:query>
+  </vprop:propertyAlias>
     <import location="UploadService.wsdl" namespace="http://www.example.org/UploadService/"/>
     <types>
 		<schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="DistributedSoundScape">
@@ -56,6 +68,9 @@
 	<message name="RemoveSpeakerRequest">
 		<part element="types:CallRemoveSpeaker" name="RemoveSpeakerRequest"/>
 	</message>
+	<message name="SetSpeakerLocationRequest">
+		<part element="types:CallMoveSpeaker" name="SetSpeakerLocationRequest"/>
+	</message>
 	<message name="ProcessPlaybackCommandRequest">
 		<part element="types:CallPlaybackCommand" name="ProcessPlaybackCommandRequest"/>
 	</message>
@@ -70,6 +85,16 @@
 	</message>
 	<message name="finishMessage">
 		<part element="rs:RegisterUserResponse" name="RegisterUserResponse"/>
+	</message>
+	
+	<message name="AddSpeakerResponse">
+		<part element="rs:AddSpeakerResponse" name="addSpeakerResponse"/>
+	</message>
+	<message name="RemoveSpeakerResponse">
+		<part element="rs:RemoveSpeakerResponse" name="RemoveSpeakerResponse"/>
+	</message>
+	<message name="MoveSpeakerResponse">
+		<part element="rs:SetSpeakerLocationResponse" name="MoveSpeakerResponse"/>
 	</message>
 	
 	<message name="uploadSongCallbackhMessage">
@@ -99,9 +124,15 @@
 		</operation>
 		<operation name="AddSpeakerFunction">
 			<input message="tns:AddSpeakerRequest"/>
+			<output message="tns:AddSpeakerResponse"/>
 		</operation>
 		<operation name="RemoveSpeakerFunction">
 			<input message="tns:RemoveSpeakerRequest"/>
+			<output message="tns:RemoveSpeakerResponse"/>
+		</operation>
+		<operation name="SetSpeakerLocationFunction">
+			<input message="tns:SetSpeakerLocationRequest"/>
+			<output message="tns:MoveSpeakerResponse"/>
 		</operation>
 		<operation name="ProcessPlaybackCommandFunction">
 			<input message="tns:ProcessPlaybackCommandRequest"/>
@@ -133,6 +164,10 @@
 	<plnk:partnerLinkType name="DistributedSoundScape">
 		<plnk:role name="DistributedSoundScapeProvider" portType="tns:DistributedSoundScape"/>
 		<plnk:role name="DistributedSoundScapeRequester" portType="tns:DistributedSoundScapeCallback"/>
+	</plnk:partnerLinkType>
+	
+	<plnk:partnerLinkType name="SyncDistributedSoundScape">
+		<plnk:role name="DistributedSoundScapeRequester" portType="tns:DistributedSoundScape"/>
 	</plnk:partnerLinkType>
 
 
@@ -170,12 +205,27 @@
 			<input>
 				<soap:body use="literal"/>
 			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
 		</operation>
 		<operation name="RemoveSpeakerFunction">
 			<soap:operation soapAction="DistributedSoundScape/RemoveSpeakerFunction"/>
 			<input>
 				<soap:body use="literal"/>
 			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="SetSpeakerLocationFunction">
+			<soap:operation soapAction="DistributedSoundScape/SetSpeakerLocationFunction"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
 		</operation>
 		<operation name="ProcessPlaybackCommandFunction">
 			<soap:operation soapAction="DistributedSoundScape/ProcessPlaybackCommandFunction"/>
