@@ -127,7 +127,7 @@
 		</sequence>
 	</complexType>
 
-	<element name="functionRequest" type="tns:conversationId"></element>
+	<element name="functionRequest" type="tns:functionRequest"></element>
 
 
 	<element name="UploadSongCallback"
@@ -137,4 +137,13 @@
 	<element name="DeleteSongCallback"
 		type="pref2:DeleteSongResponse">
 	</element>
+
+	<complexType name="functionRequest">
+		<sequence>
+			<element name="conversationId" type="tns:conversationId"></element>
+
+
+			<element name="Message" type="string"></element>
+		</sequence>
+	</complexType>
 </schema>

@@ -13,7 +13,6 @@
 	<vprop:propertyAlias messageType="wsdl:UploadSongResponse" part="Response" propertyName="tns:conversationId">
 		<vprop:query><![CDATA[/conversationId]]></vprop:query>
 	</vprop:propertyAlias>
-    <vprop:propertyAlias messageType="tns:functionRequest" part="functionRequest" propertyName="tns:conversationId"/>
     <vprop:propertyAlias messageType="tns:UploadSongRequest" part="UploadSongRequest" propertyName="tns:conversationId">
     <vprop:query><![CDATA[/conversationId]]></vprop:query>
   </vprop:propertyAlias>
@@ -40,6 +39,9 @@
     <vprop:query><![CDATA[/conversationId]]></vprop:query>
   </vprop:propertyAlias>
     <vprop:propertyAlias messageType="tns:ProcessPlaybackCommandRequest" part="ProcessPlaybackCommandRequest" propertyName="tns:conversationId">
+        <vprop:query><![CDATA[/conversationId]]></vprop:query>
+    </vprop:propertyAlias>
+    <vprop:propertyAlias messageType="tns:functionRequest" part="functionRequest" propertyName="tns:conversationId">
     <vprop:query><![CDATA[/conversationId]]></vprop:query>
   </vprop:propertyAlias>
     <import location="UploadService.wsdl" namespace="http://www.example.org/UploadService/"/>

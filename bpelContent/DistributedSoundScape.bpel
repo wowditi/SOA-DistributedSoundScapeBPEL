@@ -263,23 +263,23 @@
 		</bpel:assign>
 
 		<bpel:assign validate="no" name="AssignReguestFunction">
-			<bpel:copy>
-				<bpel:from>
-					<bpel:literal>
-						<tns:functionRequest
-							xmlns:tns="http://www.example.org/OrchestratorElements/"
-							xmlns:tns1="http://www.example.org/SoundScapeDataTypes/"
-							xmlns:tns2="http://www.example.org/RegistrationServiceElements/"
-							xmlns:tns3="http://www.example.org/ControlServiceElements/"
-							xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">tns:functionRequest
-						</tns:functionRequest>
-					</bpel:literal>
-				</bpel:from>
-				<bpel:to variable="clientRequest" part="functionRequest"></bpel:to>
-			</bpel:copy>
-			<bpel:copy>
+			
+            
+            <bpel:copy>
+                <bpel:from><bpel:literal><tns:functionRequest xmlns:tns="http://www.example.org/OrchestratorElements/" xmlns:tns1="http://www.example.org/SoundScapeDataTypes/" xmlns:tns2="http://www.example.org/RegistrationServiceElements/" xmlns:tns3="http://www.example.org/UploadServiceElements/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <conversationId>conversationId</conversationId>
+  <Message>Message</Message>
+</tns:functionRequest>
+</bpel:literal></bpel:from>
+                <bpel:to variable="clientRequest" part="functionRequest"></bpel:to>
+            </bpel:copy>
+            <bpel:copy>
 				<bpel:from variable="clientConversationId"></bpel:from>
-				<bpel:to part="functionRequest" variable="clientRequest"></bpel:to>
+				<bpel:to part="functionRequest" variable="clientRequest">
+                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                        <![CDATA[conversationId]]>
+                    </bpel:query>
+                </bpel:to>
 			</bpel:copy>
 		</bpel:assign>
 
