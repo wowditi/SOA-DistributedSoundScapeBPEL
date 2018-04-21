@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<deploy xmlns="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:DistributedSoundScape="DistributedSoundScape" xmlns:RegistrationService="http://www.example.org/RegistrationService/" xmlns:UploadService="http://www.example.org/UploadService/">
+<deploy xmlns="http://www.apache.org/ode/schemas/dd/2007/03" xmlns:ControlService="http://www.example.org/ControlService/" xmlns:DistributedSoundScape="DistributedSoundScape" xmlns:RegistrationService="http://www.example.org/RegistrationService/" xmlns:UploadService="http://www.example.org/UploadService/">
   <process name="DistributedSoundScape:DistributedSoundScape">
     <active>true</active>
     <retired>false</retired>
@@ -18,6 +18,9 @@
     </invoke>
     <invoke partnerLink="UploadService">
       <service name="UploadService:UploadService" port="UploadServiceSOAP"/>
+    </invoke>
+    <invoke partnerLink="ControlService">
+      <service name="ControlService:ControlService" port="ControlServiceSOAP"/>
     </invoke>
   </process>
 </deploy>

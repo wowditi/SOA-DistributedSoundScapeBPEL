@@ -64,6 +64,10 @@
 		<bpel:partnerLink name="UploadService"
 			partnerLinkType="us:UploadServiceLinkType"
 			partnerRole="uploadProvider" myRole="uploadRequester"></bpel:partnerLink>
+			
+		<bpel:partnerLink name="ControlService"
+			partnerLinkType="cs:ControlServiceLinkType"
+			partnerRole="controlService"></bpel:partnerLink>
 
 	</bpel:partnerLinks>
 
@@ -81,10 +85,6 @@
 
 		<bpel:variable name="RegisterUserResponseMessage"
 			messageType="rs:RegisterUserResponse"></bpel:variable>
-
-		<!-- Reference to the message that will be returned to the requester -->
-		<bpel:variable name="ConfirmRegistrationMessage"
-			messageType="tns:ConfirmRegistrationMessage" />
 
 		<bpel:variable name="UploadSongRequest"
 			messageType="us:UploadSongRequest">
@@ -112,10 +112,7 @@
 	<bpel:correlationSets>
 		<bpel:correlationSet name="UploadCorrelationSet"
 			properties="tns:conversationId"></bpel:correlationSet>
-	</bpel:correlationSets>
-
-	<bpel:correlationSets>
-		<bpel:correlationSet name="ClientCorrelationSet"
+    <bpel:correlationSet name="ClientCorrelationSet"
 			properties="tns:conversationId"></bpel:correlationSet>
 	</bpel:correlationSets>
 
@@ -124,7 +121,7 @@
 		<!-- Receive input from requester. Note: This maps to operation defined 
 			in DistributedSoundScape.wsdl -->
 		<bpel:receive name="receiveInput" partnerLink="client"
-			portType="tns:DistributedSoundScape" operation="RegisterUserRequest"
+			portType="tns:DistributedSoundScape" operation="RegisterUserFunction"
 			variable="RegisterUserMessage" createInstance="yes" />
 
 		<bpel:assign>
@@ -157,25 +154,21 @@
 				
 		
         <bpel:pick name="Pick">
-            <bpel:onMessage partnerLink="client" operation="callFunction" portType="tns:DistributedSoundScape">
-            	<bpel:invoke name="UploadSong" partnerLink="UploadService" portType="us:UploadService" operation="UploadSong" inputVariable="UploadSongRequest">
-					<bpel:correlations>
-						<bpel:correlation set="UploadCorrelationSet" initiate="yes"></bpel:correlation>
-					</bpel:correlations>
-		
-				</bpel:invoke>
-		
-				<bpel:receive name="receiveUploadSongCallback" partnerLink="UploadService" portType="us:UploadCallbackService" operation="UploadSongCallback" variable="UploadSongResponse">
-					<bpel:correlations>
-						<bpel:correlation set="UploadCorrelationSet" initiate="no"></bpel:correlation>
-					</bpel:correlations>
-				</bpel:receive>
+            <bpel:onMessage partnerLink="client" operation="UploadSongFunction" portType="tns:DistributedSoundScape">
+            	<!-- copy stuff -->
+            	<bpel:scope name="UploadSongScope">
+            		<bpel:sequence>
+	            		<bpel:invoke name="UploadSong" partnerLink="UploadService" portType="us:UploadService" operation="UploadSong" inputVariable="UploadSongRequest">
+							<bpel:correlations>
+								<bpel:correlation set="UploadCorrelationSet" initiate="yes"></bpel:correlation>
+							</bpel:correlations>
+						</bpel:invoke>
+					</bpel:sequence>
+            	</bpel:scope>
+            	
             </bpel:onMessage>
-            <bpel:onMessage></bpel:onMessage>
-            <bpel:onMessage></bpel:onMessage>
-            <bpel:onMessage></bpel:onMessage>
-            <bpel:onMessage></bpel:onMessage>
-            <bpel:onMessage></bpel:onMessage>
+            <bpel:onMessage partnerLink="UploadService" portType="us:UploadCallbackService" operation="UploadSongCallback" variable="UploadSongResponse"></bpel:onMessage>
+            <bpel:onMessage partnerLink="client" portType="tns:DistributedSoundScape" operation="stopFunction"></bpel:onMessage>
         </bpel:pick>
 	</bpel:sequence>
 </bpel:process>

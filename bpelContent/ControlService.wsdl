@@ -3,6 +3,7 @@
 	xmlns:tns="http://www.example.org/ControlService/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ControlService"
 	xmlns:types="http://www.example.org/ControlServiceElements/"
+	xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype"
 	targetNamespace="http://www.example.org/ControlService/">
 	<wsdl:types>
 		<xsd:schema targetNamespace="http://www.example.org/ControlService/">
@@ -10,6 +11,12 @@
 				schemaLocation="schemas/type-definitions/ControlServiceElements.xsd" />
 		</xsd:schema>
 	</wsdl:types>
+	
+	<plnk:partnerLinkType name="ControlServiceLinkType">
+		<plnk:role name="controlService" portType="tns:ControlService" />
+	</plnk:partnerLinkType>
+	
+	
 	<wsdl:message name="SetSoundScapeSourceLayoutRequest">
 		<wsdl:part element="types:SetSoundScapeSourceLayoutRequest"
 			name="SetSoundScapeSourceLayoutRequest" />

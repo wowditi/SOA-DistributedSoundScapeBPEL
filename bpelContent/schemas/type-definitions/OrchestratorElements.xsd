@@ -125,4 +125,7 @@
 			<element name="conversationId" type="string"></element>
 		</sequence>
 	</complexType>
+
+	<element name="functionRequest" type="tns:conversationId"></element>
+
 </schema>

@@ -10,7 +10,7 @@
 	xmlns:us="http://www.example.org/UploadServiceElements/"
 	xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop"
 	xmlns:wsdl="http://www.example.org/UploadService/"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema"  
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	name="DistributedSoundScape" targetNamespace="DistributedSoundScape">
 
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
@@ -78,15 +78,24 @@
 		<part element="types:CallAddSpeaker" name="AddSpeakerRequest" />
 	</message>
 	<message name="RemoveSpeakerRequest">
-		<part element="types:CallRemoveSpeaker" name="RemoveSpeakerRequest" />
+		<part element="types:CallRemoveSpeaker"
+			name="RemoveSpeakerRequest" />
 	</message>
 	<message name="ProcessPlaybackCommandRequest">
-		<part element="types:CallPlaybackCommand" name="ProcessPlaybackCommandRequest" />
+		<part element="types:CallPlaybackCommand"
+			name="ProcessPlaybackCommandRequest" />
 	</message>
 	<message name="SetSoundScapeSourceLayoutRequest">
-		<part element="types:CallSetSoundScapeSourceLayout" name="SetSoundScapeSourceLayoutRequest" />
+		<part element="types:CallSetSoundScapeSourceLayout"
+			name="SetSoundScapeSourceLayoutRequest" />
 	</message>
-	<message name="ConfirmRegistrationMessage">
+	<message name="stopRequest">
+		<part element="types:Stop" name="stopRequest" />
+	</message>
+	<message name="functionRequest">
+		<part element="types:functionRequest" name="functionRequest" />
+	</message>
+	<message name="finishMessage">
 		<part element="rs:RegisterUserResponse"
 			name="RegisterUserResponse" />
 	</message>
@@ -97,17 +106,41 @@
 
 	<!-- portType implemented by the DistributedSoundScape BPEL process -->
 	<portType name="DistributedSoundScape">
-		<operation name="RegisterUserRequest">
+		<operation name="RegisterUserFunction">
 			<input message="tns:RegisterUserRequest" />
 		</operation>
-		<operation name="UploadSongRequest">
+		<operation name="UploadSongFunction">
 			<input message="tns:UploadSongRequest" />
+		</operation>
+		<operation name="DeleteSongFunction">
+			<input message="tns:DeleteSongRequest" />
+		</operation>
+		<operation name="IsSongLoadedFunction">
+			<input message="tns:IsSongLoadedRequest" />
+		</operation>
+		<operation name="AddSpeakerFunction">
+			<input message="tns:AddSpeakerRequest" />
+		</operation>
+		<operation name="RemoveSpeakerFunction">
+			<input message="tns:RemoveSpeakerRequest" />
+		</operation>
+		<operation name="ProcessPlaybackCommandFunction">
+			<input message="tns:ProcessPlaybackCommandRequest" />
+		</operation>
+		<operation name="SetSoundScapeSourceLayoutFunction">
+			<input message="tns:SetSoundScapeSourceLayoutRequest" />
+		</operation>
+		<operation name="stopFunction">
+			<input message="tns:stopRequest" />
+		</operation>
+		<operation name="finishFunction">
+			<input message="tns:finishMessage" />
 		</operation>
 	</portType>
 
 	<portType name="DistributedSoundScapeCallback">
-		<operation name="onResult">
-			<input message="tns:ConfirmRegistrationMessage" />
+		<operation name="requestFunction">
+			<input message="tns:functionRequest" />
 		</operation>
 	</portType>
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
@@ -127,16 +160,72 @@
 		type="tns:DistributedSoundScape">
 		<soap:binding style="document"
 			transport="http://schemas.xmlsoap.org/soap/http" />
-		<operation name="process">
+		<operation name="RegisterUserFunction">
 			<soap:operation
-				soapAction="DistributedSoundScape/process" />
+				soapAction="DistributedSoundScape/RegisterUserFunction" />
 			<input>
 				<soap:body use="literal" />
 			</input>
 		</operation>
-		<operation name="callFunction">
+		<operation name="UploadSongFunction">
 			<soap:operation
-				soapAction="DistributedSoundScape/callFunction" />
+				soapAction="DistributedSoundScape/UploadSongFunction" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+		</operation>
+		<operation name="DeleteSongFunction">
+			<soap:operation
+				soapAction="DistributedSoundScape/DeleteSongFunction" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+		</operation>
+		<operation name="IsSongLoadedFunction">
+			<soap:operation
+				soapAction="DistributedSoundScape/IsSongLoadedFunction" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+		</operation>
+		<operation name="AddSpeakerFunction">
+			<soap:operation
+				soapAction="DistributedSoundScape/AddSpeakerFunction" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+		</operation>
+		<operation name="RemoveSpeakerFunction">
+			<soap:operation
+				soapAction="DistributedSoundScape/RemoveSpeakerFunction" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+		</operation>
+		<operation name="ProcessPlaybackCommandFunction">
+			<soap:operation
+				soapAction="DistributedSoundScape/ProcessPlaybackCommandFunction" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+		</operation>
+		<operation name="SetSoundScapeSourceLayoutFunction">
+			<soap:operation
+				soapAction="DistributedSoundScape/SetSoundScapeSourceLayoutFunction" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+		</operation>
+		<operation name="stopFunction">
+			<soap:operation
+				soapAction="DistributedSoundScape/stopFunction" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+		</operation>
+		<operation name="finishFunction">
+			<soap:operation
+				soapAction="DistributedSoundScape/finishFunction" />
 			<input>
 				<soap:body use="literal" />
 			</input>
@@ -147,9 +236,9 @@
 		type="tns:DistributedSoundScapeCallback">
 		<soap:binding style="document"
 			transport="http://schemas.xmlsoap.org/soap/http" />
-		<operation name="onResult">
+		<operation name="requestFunction">
 			<soap:operation
-				soapAction="DistributedSoundScape/onResult" />
+				soapAction="DistributedSoundScape/requestFunction" />
 			<input>
 				<soap:body use="literal" />
 			</input>

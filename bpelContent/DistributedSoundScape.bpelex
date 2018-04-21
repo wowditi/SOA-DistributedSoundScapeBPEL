@@ -33,19 +33,19 @@
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
   </extensions>
   <extensions>
-    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.0"/>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.1"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
   </extensions>
   <extensions>
     <extendedObject href="DistributedSoundScape.bpel#/"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1524251373263"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1524298863802"/>
   </extensions>
   <extensions>
-    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.1/@copy.1"/>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.2/@copy.1"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
   </extensions>
   <extensions>
-    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.1"/>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.2"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
   </extensions>
   <extensions>
@@ -57,51 +57,55 @@
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
   </extensions>
   <extensions>
-    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.1/@copy.0"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.3/@messages.1"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:OnMessageExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.3/@messages.2"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:OnMessageExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.3/@messages.3"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:OnMessageExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.3/@messages.4"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:OnMessageExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.3/@messages.5"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:OnMessageExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.2"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
-  </extensions>
-  <extensions>
     <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.2/@copy.0"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
   </extensions>
   <extensions>
-    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.2/@copy.1"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.4/@messages.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:OnMessageExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.4/@messages.2"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:OnMessageExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.4/@messages.3"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:OnMessageExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.4/@messages.4"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:OnMessageExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.4/@messages.5"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:OnMessageExtension"/>
   </extensions>
   <extensions>
     <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.3"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
   </extensions>
   <extensions>
-    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.3/@messages.0"/>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.3/@copy.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.3/@copy.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.4"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.4/@messages.0"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:OnMessageExtension"/>
   </extensions>
   <extensions>
-    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.3/@messages.0/@activity"/>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.4/@messages.0/@activity"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.0"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
   </extensions>
 </extensionmodel:ExtensionMap>
