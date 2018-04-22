@@ -704,7 +704,8 @@
 								<bpel:to part="RemoveSpeakerRequest"
 									variable="RemoveSpeakerRequest"></bpel:to>
 							</bpel:copy>
-						</bpel:assign>
+                            
+                        </bpel:assign>
 						<bpel:invoke name="RemoveSpeaker"
 							partnerLink="RegistrationService" operation="RemoveSpeaker"
 							portType="rs:RegistrationService"
@@ -795,7 +796,13 @@
 								<bpel:to part="SetSpeakerLocationRequest"
 									variable="SetSpeakerLocationRequest"></bpel:to>
 							</bpel:copy>
-						</bpel:assign>
+                            <bpel:copy>
+                                <bpel:from variable="user"></bpel:from>
+                                <bpel:to part="SetSpeakerLocationRequest" variable="SetSpeakerLocationRequest">
+                                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[User]]></bpel:query>
+                                </bpel:to>
+                            </bpel:copy>
+                        </bpel:assign>
 						<bpel:invoke name="SetSpeakerLocation"
 							partnerLink="RegistrationService" operation="SetSpeakerLocation"
 							portType="rs:RegistrationService"

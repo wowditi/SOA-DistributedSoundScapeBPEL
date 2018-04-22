@@ -4698,6 +4698,604 @@
         <con:properties/>
       </con:breakPoints>
     </con:testCase>
+    <con:testCase id="577ad66a-f271-4e6e-8fc0-e16dc76316da" discardOkResults="false" failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="CombinedTest" searchProperties="true" timeout="0">
+      <con:settings/>
+      <con:savedRecentRuns>1</con:savedRecentRuns>
+      <con:testStep type="properties" name="properties" id="24d5d256-9c2c-4fcb-9c09-05d3f4f851cd">
+        <con:settings/>
+        <con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:properties>
+            <con:property>
+              <con:name>conversationId</con:name>
+              <con:value>w4aaa</con:value>
+            </con:property>
+          </con:properties>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="request" name="RegisterUser" id="b4585db2-c15a-4326-9dea-d534f453b48c">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeBinding</con:interface>
+          <con:operation>RegisterUserFunction</con:operation>
+          <con:request name="RegisterUser" id="e51873b4-7b3c-4762-9567-b46598534b02">
+            <con:settings>
+              <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+            </con:settings>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:reg="http://www.example.org/RegistrationServiceElements/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <reg:RegisterUserRequest>
+         <User>
+            <IpAddress>0.0.0.0</IpAddress>
+            <Port>1</Port>
+            <SoundScapeId>1</SoundScapeId>
+         </User>
+      </reg:RegisterUserRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:credentials>
+              <con:selectedAuthProfile>Inherit From Parent</con:selectedAuthProfile>
+              <con:authType>No Authorization</con:authType>
+            </con:credentials>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="mockresponse" name="Reply" id="a591de9a-2ee5-44e1-9b96-b72a9c7783b1">
+        <con:settings/>
+        <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>requestFunction</con:operation>
+          <con:path>/onResult</con:path>
+          <con:port>8182</con:port>
+          <con:response id="6b51d4f6-0bcd-413e-985f-582bec5d4979">
+            <con:settings/>
+            <con:responseContent xsi:nil="true"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+          </con:response>
+          <con:assertion type="XPath Match" id="aa29064b-d926-40d9-bc31-e22ddcd803df" name="Match content of [Message]">
+            <con:configuration>
+              <path>declare namespace ns1='http://www.example.org/OrchestratorElements/';
+//ns1:functionRequest[1]/Message[1]/text()</path>
+              <content>Success</content>
+              <allowWildcards>false</allowWildcards>
+              <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+              <ignoreComments>false</ignoreComments>
+            </con:configuration>
+          </con:assertion>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="transfer" name="PropertyTransfer 1" id="cf5ef222-99fa-4323-9598-1c348629ab98">
+        <con:settings/>
+        <con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false" entitize="false" transferChildNodes="false">
+            <con:name>functionRequest</con:name>
+            <con:sourceType>Request</con:sourceType>
+            <con:sourceStep>Reply</con:sourceStep>
+            <con:sourcePath>declare namespace ns1='http://www.example.org/OrchestratorElements/';
+//ns1:functionRequest[1]/conversationId[1]</con:sourcePath>
+            <con:targetType>conversationId</con:targetType>
+            <con:targetStep>properties</con:targetStep>
+            <con:targetPath/>
+            <con:type>XPATH</con:type>
+            <con:upgraded>true</con:upgraded>
+          </con:transfers>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="request" name="UploadSong" id="f1449930-9c73-46eb-b26c-e6ee00bf23c3">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeBinding</con:interface>
+          <con:operation>UploadSongFunction</con:operation>
+          <con:request name="UploadSong" id="c8f1f340-90d5-449d-8486-7810e15a5036">
+            <con:settings>
+              <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+            </con:settings>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://www.example.org/OrchestratorElements/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <orc:CallUploadSong>
+         <Link>
+            <Type>http</Type>
+            <Address>tegos.kz/new/mp3_full/Kygo_feat._Justin_Jesso_-_Stargazing.mp3</Address>
+         </Link>
+         <conversationId>${properties#conversationId}</conversationId>
+      </orc:CallUploadSong>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:credentials>
+              <con:selectedAuthProfile>Inherit From Parent</con:selectedAuthProfile>
+              <con:authType>No Authorization</con:authType>
+            </con:credentials>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="mockresponse" name="Reply 3" id="3ed5ad24-fca0-42c3-a348-07d64d908fee">
+        <con:settings/>
+        <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>requestFunction</con:operation>
+          <con:path>/onResult</con:path>
+          <con:port>8182</con:port>
+          <con:response id="fc02e664-5d3f-4e9a-bbb2-116cb0fadd03">
+            <con:settings/>
+            <con:responseContent xsi:nil="true"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+          </con:response>
+          <con:assertion type="XPath Match" id="13f56e8d-37d9-41ce-a171-875ee60202b5" name="Match content of [Message]">
+            <con:configuration>
+              <path>declare namespace ns1='http://www.example.org/OrchestratorElements/';
+//ns1:functionRequest[1]/Message[1]/text()</path>
+              <content>Success</content>
+              <allowWildcards>false</allowWildcards>
+              <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+              <ignoreComments>false</ignoreComments>
+            </con:configuration>
+          </con:assertion>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="mockresponse" name="Reply 2" id="20460853-e9bb-4ecf-a236-c9f6e58b2004">
+        <con:settings/>
+        <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>uploadSongCallbackFunction</con:operation>
+          <con:path>/onResult</con:path>
+          <con:port>8182</con:port>
+          <con:response id="50cb363e-0197-4a0b-8131-4cb197a6c500">
+            <con:settings/>
+            <con:responseContent xsi:nil="true"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+          </con:response>
+          <con:assertion type="XPath Match" id="5ca18ddb-e117-417c-9ffb-7a756eaca8a6" name="Match content of [Successfull]">
+            <con:configuration>
+              <path>declare namespace ns1='http://www.example.org/OrchestratorElements/';
+//ns1:UploadSongCallback[1]/response[1]/Successfull[1]/text()</path>
+              <content>true</content>
+              <allowWildcards>false</allowWildcards>
+              <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+              <ignoreComments>false</ignoreComments>
+            </con:configuration>
+          </con:assertion>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="request" name="Copy of UploadSong" id="fd84b223-30e3-4cbb-b67a-27f3184f6646">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeBinding</con:interface>
+          <con:operation>UploadSongFunction</con:operation>
+          <con:request name="Copy of UploadSong" id="c8f1f340-90d5-449d-8486-7810e15a5036">
+            <con:settings>
+              <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+            </con:settings>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://www.example.org/OrchestratorElements/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <orc:CallUploadSong>
+         <Link>
+            <Type>https</Type>
+            <Address>sadf</Address>
+         </Link>
+         <conversationId>${properties#conversationId}</conversationId>
+      </orc:CallUploadSong>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:credentials>
+              <con:selectedAuthProfile>Inherit From Parent</con:selectedAuthProfile>
+              <con:authType>No Authorization</con:authType>
+            </con:credentials>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="mockresponse" name="Copy of Reply 3" id="8954c607-3d79-4230-b3a3-7eb122c194b1">
+        <con:settings/>
+        <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>requestFunction</con:operation>
+          <con:path>/onResult</con:path>
+          <con:port>8182</con:port>
+          <con:response id="fc02e664-5d3f-4e9a-bbb2-116cb0fadd03">
+            <con:settings/>
+            <con:responseContent xsi:nil="true"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+          </con:response>
+          <con:assertion type="XPath Match" id="13f56e8d-37d9-41ce-a171-875ee60202b5" name="Match content of [Message]">
+            <con:configuration>
+              <path>declare namespace ns1='http://www.example.org/OrchestratorElements/';
+//ns1:functionRequest[1]/Message[1]/text()</path>
+              <content>Success</content>
+              <allowWildcards>false</allowWildcards>
+              <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+              <ignoreComments>false</ignoreComments>
+            </con:configuration>
+          </con:assertion>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="mockresponse" name="Copy of Reply 2" id="c7020959-ca9e-4269-8830-d2d903861ca7">
+        <con:settings/>
+        <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>uploadSongCallbackFunction</con:operation>
+          <con:path>/onResult</con:path>
+          <con:port>8182</con:port>
+          <con:response id="50cb363e-0197-4a0b-8131-4cb197a6c500">
+            <con:settings/>
+            <con:responseContent xsi:nil="true"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+          </con:response>
+          <con:assertion type="XPath Match" id="b5873990-9863-489a-9cb1-6911cd6be9e7" name="Match content of [ErrorMessage]">
+            <con:configuration>
+              <path>declare namespace ns1='http://www.example.org/OrchestratorElements/';
+//ns1:UploadSongCallback[1]/response[1]/ErrorMessage[1]/text()</path>
+              <content>java.lang.RuntimeException: Unable to download file: java.net.UnknownHostException: sadf</content>
+              <allowWildcards>false</allowWildcards>
+              <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+              <ignoreComments>false</ignoreComments>
+            </con:configuration>
+          </con:assertion>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="request" name="Copy of ProcessPlaybackCommand" id="cf6e7acb-3224-4db8-9c01-62381f02800d">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeBinding</con:interface>
+          <con:operation>ProcessPlaybackCommandFunction</con:operation>
+          <con:request name="Copy of ProcessPlaybackCommand" id="cbec82fb-c059-4667-8112-26f9c76319bf">
+            <con:settings>
+              <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+            </con:settings>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://www.example.org/OrchestratorElements/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <orc:CallPlaybackCommand>
+         <playbackCommand>some command</playbackCommand>
+         <conversationId>${properties#conversationId}</conversationId>
+      </orc:CallPlaybackCommand>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:credentials>
+              <con:selectedAuthProfile>Inherit From Parent</con:selectedAuthProfile>
+              <con:authType>No Authorization</con:authType>
+            </con:credentials>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="mockresponse" name="Copy of Reply 2 2" id="b848a094-9b47-4e45-b746-8abc627ec4ea">
+        <con:settings/>
+        <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>requestFunction</con:operation>
+          <con:path>/onResult</con:path>
+          <con:port>8182</con:port>
+          <con:response id="20c694bd-80a1-4a60-8531-647a1493d530">
+            <con:settings/>
+            <con:responseContent xsi:nil="true"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+          </con:response>
+          <con:assertion type="XPath Match" id="d317f6eb-bea0-4717-bd71-133e434a69bb" name="Match content of [Message]">
+            <con:configuration>
+              <path>declare namespace ns1='http://www.example.org/OrchestratorElements/';
+//ns1:functionRequest[1]/Message[1]/text()</path>
+              <content>Success</content>
+              <allowWildcards>false</allowWildcards>
+              <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+              <ignoreComments>false</ignoreComments>
+            </con:configuration>
+          </con:assertion>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="request" name="Copy of ProcessPlaybackCommand 2" id="47d9fb5f-cc17-4077-babf-92a4437e3bb3">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeBinding</con:interface>
+          <con:operation>ProcessPlaybackCommandFunction</con:operation>
+          <con:request name="Copy of ProcessPlaybackCommand 2" id="cbec82fb-c059-4667-8112-26f9c76319bf">
+            <con:settings>
+              <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+            </con:settings>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://www.example.org/OrchestratorElements/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <orc:CallPlaybackCommand>
+         <playbackCommand>faulty</playbackCommand>
+         <conversationId>${properties#conversationId}</conversationId>
+      </orc:CallPlaybackCommand>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:credentials>
+              <con:selectedAuthProfile>Inherit From Parent</con:selectedAuthProfile>
+              <con:authType>No Authorization</con:authType>
+            </con:credentials>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="mockresponse" name="Copy of Reply 2 3" id="f86c37b9-080c-403d-b3ff-f3f258c7a792">
+        <con:settings/>
+        <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>requestFunction</con:operation>
+          <con:path>/onResult</con:path>
+          <con:port>8182</con:port>
+          <con:response id="20c694bd-80a1-4a60-8531-647a1493d530">
+            <con:settings/>
+            <con:responseContent xsi:nil="true"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+          </con:response>
+          <con:assertion type="XPath Match" id="5198ffa2-85df-4c34-b279-b7f6857005b5" name="Match content of [Message]">
+            <con:configuration>
+              <path>declare namespace ns1='http://www.example.org/OrchestratorElements/';
+//ns1:functionRequest[1]/Message[1]/text()</path>
+              <content>An error has occured</content>
+              <allowWildcards>false</allowWildcards>
+              <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+              <ignoreComments>false</ignoreComments>
+            </con:configuration>
+          </con:assertion>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="request" name="Copy of DeleteSong" id="8e1c8ca6-cdbb-4c54-8a24-54bc025abc0d">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeBinding</con:interface>
+          <con:operation>DeleteSongFunction</con:operation>
+          <con:request name="Copy of DeleteSong" id="1db72fec-f9a8-4b6a-aee9-c938da47b22f">
+            <con:settings>
+              <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+            </con:settings>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://www.example.org/OrchestratorElements/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <orc:CallDeleteSong>
+         <Link>
+            <Type>http</Type>
+            <Address>tegos.kz/new/mp3_full/Kygo_feat._Justin_Jesso_-_Stargazing.mp3</Address>
+         </Link>
+         <conversationId>${properties#conversationId}</conversationId>
+      </orc:CallDeleteSong>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:credentials>
+              <con:selectedAuthProfile>Inherit From Parent</con:selectedAuthProfile>
+              <con:authType>No Authorization</con:authType>
+            </con:credentials>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="mockresponse" name="Copy of Reply 3 2" id="84928ae7-3c95-42c3-bfcd-068b612ffe32">
+        <con:settings/>
+        <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>requestFunction</con:operation>
+          <con:path>/onResult</con:path>
+          <con:port>8182</con:port>
+          <con:response id="fc02e664-5d3f-4e9a-bbb2-116cb0fadd03">
+            <con:settings/>
+            <con:responseContent xsi:nil="true"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+          </con:response>
+          <con:assertion type="XPath Match" id="13f56e8d-37d9-41ce-a171-875ee60202b5" name="Match content of [Message]">
+            <con:configuration>
+              <path>declare namespace ns1='http://www.example.org/OrchestratorElements/';
+//ns1:functionRequest[1]/Message[1]/text()</path>
+              <content>Success</content>
+              <allowWildcards>false</allowWildcards>
+              <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+              <ignoreComments>false</ignoreComments>
+            </con:configuration>
+          </con:assertion>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="mockresponse" name="Copy of Reply 2 4" id="c7d9f904-8370-4b30-9851-07a40830eb71">
+        <con:settings/>
+        <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>deleteSongCallbackFunction</con:operation>
+          <con:path>/onResult</con:path>
+          <con:port>8182</con:port>
+          <con:response id="50cb363e-0197-4a0b-8131-4cb197a6c500">
+            <con:settings/>
+            <con:responseContent xsi:nil="true"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+          </con:response>
+          <con:assertion type="XPath Match" id="9a7672cc-1b6c-4d42-ad41-e049350d603c" name="Match content of [Successfull]">
+            <con:configuration>
+              <path>declare namespace ns1='http://www.example.org/OrchestratorElements/';
+//ns1:DeleteSongCallback[1]/response[1]/Successfull[1]/text()</path>
+              <content>true</content>
+              <allowWildcards>false</allowWildcards>
+              <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+              <ignoreComments>false</ignoreComments>
+            </con:configuration>
+          </con:assertion>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="request" name="Copy of SetSoundScapeSourceLayout" id="3b9b2a17-5dfc-417e-ba38-fdbd6bd26691">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeBinding</con:interface>
+          <con:operation>SetSoundScapeSourceLayoutFunction</con:operation>
+          <con:request name="Copy of SetSoundScapeSourceLayout" id="d38fe6bb-9214-44dc-b8a3-d82b9aabd5ce">
+            <con:settings>
+              <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+            </con:settings>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://www.example.org/OrchestratorElements/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <orc:CallSetSoundScapeSourceLayout>
+         <setSoundScapeSourceLayoutRequest>
+            <!--1 or more repetitions:-->
+            <ChannelLayouts>
+               <ChannelNumber>5</ChannelNumber>
+               <Location>
+                  <x>23</x>
+                  <y>34</y>
+                  <z>53</z>
+               </Location>
+               <VolumeLevel>0.3</VolumeLevel>
+            </ChannelLayouts>
+         </setSoundScapeSourceLayoutRequest>
+         <conversationId>${properties#conversationId}</conversationId>
+      </orc:CallSetSoundScapeSourceLayout>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:credentials>
+              <con:selectedAuthProfile>Inherit From Parent</con:selectedAuthProfile>
+              <con:authType>No Authorization</con:authType>
+            </con:credentials>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="mockresponse" name="Copy of Reply 2 5" id="eb6bd5c8-e264-44ca-af4d-06ec9495de4c">
+        <con:settings/>
+        <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>requestFunction</con:operation>
+          <con:path>/onResult</con:path>
+          <con:port>8182</con:port>
+          <con:response id="20c694bd-80a1-4a60-8531-647a1493d530">
+            <con:settings/>
+            <con:responseContent xsi:nil="true"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+          </con:response>
+          <con:assertion type="XPath Match" id="d317f6eb-bea0-4717-bd71-133e434a69bb" name="Match content of [Message]">
+            <con:configuration>
+              <path>declare namespace ns1='http://www.example.org/OrchestratorElements/';
+//ns1:functionRequest[1]/Message[1]/text()</path>
+              <content>Success</content>
+              <allowWildcards>false</allowWildcards>
+              <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+              <ignoreComments>false</ignoreComments>
+            </con:configuration>
+          </con:assertion>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="request" name="stop" id="183b7089-9e69-44cf-b40e-aac2edc0454f">
+        <con:settings/>
+        <con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeBinding</con:interface>
+          <con:operation>stopFunction</con:operation>
+          <con:request name="stop" id="f906efcb-2490-4f66-b1c2-2711adeb51a2">
+            <con:settings>
+              <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+            </con:settings>
+            <con:encoding>UTF-8</con:encoding>
+            <con:endpoint>http://localhost:8080/ode/processes/DistributedSoundScape</con:endpoint>
+            <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:orc="http://www.example.org/OrchestratorElements/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <orc:Stop>${properties#conversationId}</orc:Stop>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request>
+            <con:credentials>
+              <con:selectedAuthProfile>Inherit From Parent</con:selectedAuthProfile>
+              <con:authType>No Authorization</con:authType>
+            </con:credentials>
+            <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+            <con:wsrmConfig version="1.2"/>
+          </con:request>
+        </con:config>
+      </con:testStep>
+      <con:testStep type="mockresponse" name="finished" id="9986ff44-28ca-4497-86a0-949bd5e9bcb5">
+        <con:settings/>
+        <con:config xsi:type="con:MockResponseStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:interface>DistributedSoundScapeCallbackBinding</con:interface>
+          <con:operation>finishFunction</con:operation>
+          <con:path>/onResult</con:path>
+          <con:port>8182</con:port>
+          <con:response id="644bb7de-347e-4ea0-ac49-3f62908dfebb">
+            <con:settings/>
+            <con:responseContent xsi:nil="true"/>
+            <con:wsaConfig mustUnderstand="NONE" version="200508"/>
+          </con:response>
+          <con:assertion type="XPath Match" id="90d64924-2fb4-45ea-af3d-ebc9d0a1eb1c" name="Match content of [RegisterUserResponse]">
+            <con:configuration>
+              <path>declare namespace ns1='http://www.example.org/RegistrationServiceElements/';
+//ns1:RegisterUserResponse[1]/text()</path>
+              <content>true</content>
+              <allowWildcards>false</allowWildcards>
+              <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+              <ignoreComments>false</ignoreComments>
+            </con:configuration>
+          </con:assertion>
+        </con:config>
+      </con:testStep>
+      <con:properties>
+        <con:property>
+          <con:name>conversationId</con:name>
+          <con:value>0</con:value>
+        </con:property>
+      </con:properties>
+      <con:reportParameters/>
+      <con:breakPoints>
+        <con:testStepId>a0a915d8-a908-4fd3-a80c-a9f6d8f95492</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>fd84b223-30e3-4cbb-b67a-27f3184f6646</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>8954c607-3d79-4230-b3a3-7eb122c194b1</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>c7020959-ca9e-4269-8830-d2d903861ca7</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>183b7089-9e69-44cf-b40e-aac2edc0454f</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>eb6bd5c8-e264-44ca-af4d-06ec9495de4c</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+      <con:breakPoints>
+        <con:testStepId>9986ff44-28ca-4497-86a0-949bd5e9bcb5</con:testStepId>
+        <con:status>NONE</con:status>
+        <con:properties/>
+      </con:breakPoints>
+    </con:testCase>
     <con:properties/>
     <con:reportParameters/>
   </con:testSuite>
