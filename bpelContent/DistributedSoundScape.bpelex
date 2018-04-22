@@ -26,7 +26,7 @@
   </extensions>
   <extensions>
     <extendedObject href="DistributedSoundScape.bpel#/"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1524391729047"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1524393576913"/>
   </extensions>
   <extensions>
     <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.2"/>

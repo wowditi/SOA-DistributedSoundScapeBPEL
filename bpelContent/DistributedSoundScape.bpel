@@ -232,7 +232,7 @@
 			</bpel:copy>
 			<bpel:copy>
 				<bpel:from>
-	                    <![CDATA[bpel:doXslTransform("HelloXslWorld.xsl", $uploadServiceConversationId)]]>
+	                    <![CDATA[bpel:doXslTransform("GenerateId.xsl", $uploadServiceConversationId)]]>
 				</bpel:from>
 				<bpel:to
 					expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0"
@@ -250,7 +250,7 @@
 			</bpel:copy>
 			<bpel:copy>
 				<bpel:from>
-	                    <![CDATA[bpel:doXslTransform("HelloXslWorld.xsl", $clientConversationId)]]>
+	                    <![CDATA[bpel:doXslTransform("GenerateId.xsl", $clientConversationId)]]>
 				</bpel:from>
 				<bpel:to
 					expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath2.0"
