@@ -44,6 +44,9 @@
     <vprop:propertyAlias messageType="tns:functionRequest" part="functionRequest" propertyName="tns:conversationId">
     <vprop:query><![CDATA[/conversationId]]></vprop:query>
   </vprop:propertyAlias>
+    <vprop:propertyAlias messageType="wsdl:DeleteSongResponse" part="Response" propertyName="tns:conversationId">
+    <vprop:query><![CDATA[/conversationId]]></vprop:query>
+  </vprop:propertyAlias>
     <import location="UploadService.wsdl" namespace="http://www.example.org/UploadService/"/>
     <types>
 		<schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="DistributedSoundScape">
@@ -157,9 +160,6 @@
 		<operation name="stopFunction">
 			<input message="tns:stopRequest"/>
 		</operation>
-		<operation name="finishFunction">
-			<input message="tns:finishMessage"/>
-		</operation>
 	</portType>
 
 	<portType name="DistributedSoundScapeCallback">
@@ -171,6 +171,9 @@
 		</operation>
 		<operation name="deleteSongCallbackFunction">
 			<input message="tns:deleteSongCallbackhMessage"/>
+		</operation>
+		<operation name="finishFunction">
+			<input message="tns:finishMessage"/>
 		</operation>
 	</portType>
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
@@ -259,12 +262,6 @@
 				<soap:body use="literal"/>
 			</input>
 		</operation>
-		<operation name="finishFunction">
-			<soap:operation soapAction="DistributedSoundScape/finishFunction"/>
-			<input>
-				<soap:body use="literal"/>
-			</input>
-		</operation>
 	</binding>
 
 	<binding name="DistributedSoundScapeCallbackBinding" type="tns:DistributedSoundScapeCallback">
@@ -283,6 +280,12 @@
 		</operation>
 		<operation name="deleteSongCallbackFunction">
 			<soap:operation soapAction="DistributedSoundScape/deleteSongCallbackFunction"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+		</operation>
+		<operation name="finishFunction">
+			<soap:operation soapAction="DistributedSoundScape/finishFunction"/>
 			<input>
 				<soap:body use="literal"/>
 			</input>

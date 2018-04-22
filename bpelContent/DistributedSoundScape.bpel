@@ -17,11 +17,15 @@
 	xmlns:xpath="http://www.w3.org/2005/xpath-functions"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:ode="http://www.apache.org/ode/type/extension"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns6="http://www.example.org/ControlServiceElements/">
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:ns6="http://www.example.org/ControlServiceElements/">
 
 	<!-- Import the client WSDL -->
-    <bpel:import namespace="http://www.example.org/ControlServiceElements/" location="schemas/type-definitions/ControlServiceElements.xsd" importType="http://www.w3.org/2001/XMLSchema"></bpel:import>
-    <bpel:import
+	<bpel:import
+		namespace="http://www.example.org/ControlServiceElements/"
+		location="schemas/type-definitions/ControlServiceElements.xsd"
+		importType="http://www.w3.org/2001/XMLSchema"></bpel:import>
+	<bpel:import
 		namespace="http://www.example.org/RegistrationServiceElements/"
 		location="schemas/type-definitions/RegistrationServiceElements.xsd"
 		importType="http://www.w3.org/2001/XMLSchema"></bpel:import>
@@ -150,7 +154,7 @@
 			messageType="rs:GetSpeakersRequest"></bpel:variable>
 		<bpel:variable name="DeleteSongCall"
 			messageType="tns:DeleteSongRequest"></bpel:variable>
-		<bpel:variable name="UploadServiceRequest"
+		<bpel:variable name="DeleteSongResponse"
 			messageType="us:DeleteSongResponse"></bpel:variable>
 		<bpel:variable name="DeleteSongRequest"
 			messageType="us:DeleteSongRequest"></bpel:variable>
@@ -171,7 +175,8 @@
 			messageType="cs:SetSoundScapeSourceLayoutResponse"></bpel:variable>
 		<bpel:variable name="SetSoundScapeSourceLayoutRequest"
 			messageType="cs:SetSoundScapeSourceLayoutRequest"></bpel:variable>
-	</bpel:variables>
+        <bpel:variable name="DeleteSongCallback" messageType="tns:deleteSongCallbackhMessage"></bpel:variable>
+    </bpel:variables>
 
 	<!-- ================================================================= -->
 	<!-- ORCHESTRATION LOGIC -->
@@ -263,23 +268,23 @@
 		</bpel:assign>
 
 		<bpel:assign validate="no" name="AssignReguestFunction">
-			
-            
-            <bpel:copy>
-                <bpel:from><bpel:literal><tns:functionRequest xmlns:tns="http://www.example.org/OrchestratorElements/" xmlns:tns1="http://www.example.org/SoundScapeDataTypes/" xmlns:tns2="http://www.example.org/RegistrationServiceElements/" xmlns:tns3="http://www.example.org/UploadServiceElements/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <conversationId>conversationId</conversationId>
-  <Message>Message</Message>
-</tns:functionRequest>
-</bpel:literal></bpel:from>
-                <bpel:to variable="clientRequest" part="functionRequest"></bpel:to>
-            </bpel:copy>
-            <bpel:copy>
+			<bpel:copy>
+				<bpel:from>
+					<bpel:literal xml:space="preserve"><tns:functionRequest xmlns:tns="http://www.example.org/OrchestratorElements/" xmlns:tns1="http://www.example.org/SoundScapeDataTypes/" xmlns:tns2="http://www.example.org/RegistrationServiceElements/" xmlns:tns3="http://www.example.org/UploadServiceElements/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+							<conversationId>conversationId</conversationId>
+							<Message>Success</Message>
+						</tns:functionRequest></bpel:literal>
+				</bpel:from>
+				<bpel:to variable="clientRequest" part="functionRequest"></bpel:to>
+			</bpel:copy>
+			<bpel:copy>
 				<bpel:from variable="clientConversationId"></bpel:from>
 				<bpel:to part="functionRequest" variable="clientRequest">
-                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+					<bpel:query
+						queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
                         <![CDATA[conversationId]]>
-                    </bpel:query>
-                </bpel:to>
+					</bpel:query>
+				</bpel:to>
 			</bpel:copy>
 		</bpel:assign>
 
@@ -511,11 +516,11 @@
 								</bpel:to>
 							</bpel:copy>
 							<bpel:copy>
-								<bpel:from part="DeleteSongRequest"
-									variable="DeleteSongCall">
-									<bpel:query
-										queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"><![CDATA[Link]]></bpel:query>
-								</bpel:from>
+								<bpel:from part="DeleteSongRequest" variable="DeleteSongCall">
+                                    <bpel:query queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+                                        <![CDATA[Link]]>
+                                    </bpel:query>
+                                </bpel:from>
 								<bpel:to part="Request" variable="DeleteSongRequest">
 									<bpel:query
 										queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
@@ -528,15 +533,18 @@
 							partnerLink="UploadService" portType="us:UploadService"
 							operation="DeleteSong" inputVariable="DeleteSongRequest">
 							<bpel:correlations>
-								<bpel:correlation set="ClientCorrelationSet"
-									initiate="no"></bpel:correlation>
+								<bpel:correlation set="UploadCorrelationSet"
+									initiate="yes"></bpel:correlation>
 							</bpel:correlations>
 						</bpel:invoke>
 						<bpel:invoke name="RequestFunction"
 							partnerLink="client" operation="requestFunction"
 							portType="tns:DistributedSoundScapeCallback"
 							inputVariable="clientRequest">
-						</bpel:invoke>
+                            <bpel:correlations>
+                                <bpel:correlation set="ClientCorrelationSet" initiate="yes"></bpel:correlation>
+                            </bpel:correlations>
+                        </bpel:invoke>
 					</bpel:sequence>
 					<bpel:correlations>
 						<bpel:correlation set="ClientCorrelationSet"
@@ -546,7 +554,7 @@
 
 				<bpel:onMessage partnerLink="UploadService"
 					portType="us:UploadCallbackService" operation="DeleteSongCallback"
-					variable="UploadServiceRequest">
+					variable="DeleteSongResponse">
 					<bpel:correlations>
 						<bpel:correlation set="UploadCorrelationSet"
 							initiate="join"></bpel:correlation>
@@ -555,16 +563,16 @@
 
 						<bpel:assign validate="no" name="Assign">
 							<bpel:copy>
-								<bpel:from part="Response"
-									variable="UploadSongResponse"></bpel:from>
-								<bpel:to part="uploadSongCallbackhMessage"
-									variable="uploadSongCallback"></bpel:to>
+								<bpel:from part="Response" variable="DeleteSongResponse">
+                                </bpel:from>
+								<bpel:to part="deleteSongCallbackhMessage" variable="DeleteSongCallback"></bpel:to>
 							</bpel:copy>
-						</bpel:assign>
+                            
+                        </bpel:assign>
 						<bpel:invoke name="callback" partnerLink="client"
-							operation="uploadSongCallbackFunction"
+							operation="deleteSongCallbackFunction"
 							portType="tns:DistributedSoundScapeCallback"
-							inputVariable="uploadSongCallback"></bpel:invoke>
+							inputVariable="DeleteSongCallback"></bpel:invoke>
 					</bpel:sequence>
 				</bpel:onMessage>
 
@@ -604,7 +612,61 @@
 							partnerLink="RegistrationService" operation="AddSpeaker"
 							portType="rs:RegistrationService"
 							inputVariable="AddSpeakerRequest"
-							outputVariable="AddSpeakerResponse"></bpel:invoke>
+							outputVariable="AddSpeakerResponse">
+							<ext:failureHandling
+								xmlns:ext="http://ode.apache.org/activityRecovery">
+								<ext:faultOnFailure>true</ext:faultOnFailure>
+							</ext:failureHandling>
+							<bpel:catchAll>
+								<bpel:scope>
+									<bpel:variables>
+										<bpel:variable name="badClientRequest"
+											messageType="tns:functionRequest"></bpel:variable>
+									</bpel:variables>
+									<bpel:sequence>
+										<bpel:assign validate="no"
+											name="AssignReguestFunction">
+											<bpel:copy>
+												<bpel:from>
+													<bpel:literal>
+														<tns:functionRequest
+															xmlns:tns="http://www.example.org/OrchestratorElements/"
+															xmlns:tns1="http://www.example.org/SoundScapeDataTypes/"
+															xmlns:tns2="http://www.example.org/RegistrationServiceElements/"
+															xmlns:tns3="http://www.example.org/UploadServiceElements/"
+															xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+															<conversationId>conversationId</conversationId>
+															<Message>An error has occured</Message>
+														</tns:functionRequest>
+													</bpel:literal>
+												</bpel:from>
+												<bpel:to variable="badClientRequest"
+													part="functionRequest"></bpel:to>
+											</bpel:copy>
+											<bpel:copy>
+												<bpel:from variable="clientConversationId"></bpel:from>
+												<bpel:to part="functionRequest"
+													variable="badClientRequest">
+													<bpel:query
+														queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+								                        <![CDATA[conversationId]]>
+													</bpel:query>
+												</bpel:to>
+											</bpel:copy>
+										</bpel:assign>
+										<bpel:invoke name="RequestFunction"
+											partnerLink="client" operation="requestFunction"
+											portType="tns:DistributedSoundScapeCallback"
+											inputVariable="badClientRequest">
+											<bpel:correlations>
+												<bpel:correlation
+													set="ClientCorrelationSet" initiate="yes"></bpel:correlation>
+											</bpel:correlations>
+										</bpel:invoke>
+									</bpel:sequence>
+								</bpel:scope>
+							</bpel:catchAll>	
+						</bpel:invoke>
 						<bpel:invoke name="RequestFunction"
 							partnerLink="client" operation="requestFunction"
 							portType="tns:DistributedSoundScapeCallback"
@@ -617,7 +679,7 @@
 					</bpel:sequence>
 					<bpel:correlations>
 						<bpel:correlation set="ClientCorrelationSet"
-							initiate="no"></bpel:correlation>
+							initiate="yes"></bpel:correlation>
 					</bpel:correlations>
 				</bpel:onMessage>
 
@@ -640,7 +702,61 @@
 							partnerLink="RegistrationService" operation="RemoveSpeaker"
 							portType="rs:RegistrationService"
 							inputVariable="RemoveSpeakerRequest"
-							outputVariable="RemoveSpeakerResponse"></bpel:invoke>
+							outputVariable="RemoveSpeakerResponse">
+							<ext:failureHandling
+								xmlns:ext="http://ode.apache.org/activityRecovery">
+								<ext:faultOnFailure>true</ext:faultOnFailure>
+							</ext:failureHandling>
+							<bpel:catchAll>
+								<bpel:scope name="RemoveSpeaker">
+									<bpel:variables>
+										<bpel:variable name="badClientRequest"
+											messageType="tns:functionRequest"></bpel:variable>
+									</bpel:variables>
+									<bpel:sequence>
+										<bpel:assign validate="no"
+											name="AssignReguestFunction">
+											<bpel:copy>
+												<bpel:from>
+													<bpel:literal>
+														<tns:functionRequest
+															xmlns:tns="http://www.example.org/OrchestratorElements/"
+															xmlns:tns1="http://www.example.org/SoundScapeDataTypes/"
+															xmlns:tns2="http://www.example.org/RegistrationServiceElements/"
+															xmlns:tns3="http://www.example.org/UploadServiceElements/"
+															xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+															<conversationId>conversationId</conversationId>
+															<Message>An error has occured</Message>
+														</tns:functionRequest>
+													</bpel:literal>
+												</bpel:from>
+												<bpel:to variable="badClientRequest"
+													part="functionRequest"></bpel:to>
+											</bpel:copy>
+											<bpel:copy>
+												<bpel:from variable="clientConversationId"></bpel:from>
+												<bpel:to part="functionRequest"
+													variable="badClientRequest">
+													<bpel:query
+														queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+								                        <![CDATA[conversationId]]>
+													</bpel:query>
+												</bpel:to>
+											</bpel:copy>
+										</bpel:assign>
+										<bpel:invoke name="RequestFunction"
+											partnerLink="client" operation="requestFunction"
+											portType="tns:DistributedSoundScapeCallback"
+											inputVariable="badClientRequest">
+											<bpel:correlations>
+												<bpel:correlation
+													set="ClientCorrelationSet" initiate="yes"></bpel:correlation>
+											</bpel:correlations>
+										</bpel:invoke>
+									</bpel:sequence>
+								</bpel:scope>
+							</bpel:catchAll>	
+						</bpel:invoke>
 						<bpel:invoke name="RequestFunction"
 							partnerLink="client" operation="requestFunction"
 							portType="tns:DistributedSoundScapeCallback"
@@ -677,7 +793,61 @@
 							partnerLink="RegistrationService" operation="SetSpeakerLocation"
 							portType="rs:RegistrationService"
 							inputVariable="SetSpeakerLocationRequest"
-							outputVariable="SetSpeakerLocationResponse"></bpel:invoke>
+							outputVariable="SetSpeakerLocationResponse">
+							<ext:failureHandling
+								xmlns:ext="http://ode.apache.org/activityRecovery">
+								<ext:faultOnFailure>true</ext:faultOnFailure>
+							</ext:failureHandling>
+							<bpel:catchAll>
+								<bpel:scope name="SetSpeakerLocation">
+									<bpel:variables>
+										<bpel:variable name="badClientRequest"
+											messageType="tns:functionRequest"></bpel:variable>
+									</bpel:variables>
+									<bpel:sequence>
+										<bpel:assign validate="no"
+											name="AssignReguestFunction">
+											<bpel:copy>
+												<bpel:from>
+													<bpel:literal>
+														<tns:functionRequest
+															xmlns:tns="http://www.example.org/OrchestratorElements/"
+															xmlns:tns1="http://www.example.org/SoundScapeDataTypes/"
+															xmlns:tns2="http://www.example.org/RegistrationServiceElements/"
+															xmlns:tns3="http://www.example.org/UploadServiceElements/"
+															xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+															<conversationId>conversationId</conversationId>
+															<Message>An error has occured</Message>
+														</tns:functionRequest>
+													</bpel:literal>
+												</bpel:from>
+												<bpel:to variable="badClientRequest"
+													part="functionRequest"></bpel:to>
+											</bpel:copy>
+											<bpel:copy>
+												<bpel:from variable="clientConversationId"></bpel:from>
+												<bpel:to part="functionRequest"
+													variable="badClientRequest">
+													<bpel:query
+														queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+								                        <![CDATA[conversationId]]>
+													</bpel:query>
+												</bpel:to>
+											</bpel:copy>
+										</bpel:assign>
+										<bpel:invoke name="RequestFunction"
+											partnerLink="client" operation="requestFunction"
+											portType="tns:DistributedSoundScapeCallback"
+											inputVariable="badClientRequest">
+											<bpel:correlations>
+												<bpel:correlation
+													set="ClientCorrelationSet" initiate="yes"></bpel:correlation>
+											</bpel:correlations>
+										</bpel:invoke>
+									</bpel:sequence>
+								</bpel:scope>
+							</bpel:catchAll>
+						</bpel:invoke>
 						<bpel:invoke name="RequestFunction"
 							partnerLink="client" operation="requestFunction"
 							portType="tns:DistributedSoundScapeCallback"
@@ -776,7 +946,61 @@
 							partnerLink="ControlService"
 							operation="SetSoundScapeSourceLayout"
 							inputVariable="SetSoundScapeSourceLayoutRequest"
-							outputVariable="SetSoundScapeSourceLayoutResponse"></bpel:invoke>
+							outputVariable="SetSoundScapeSourceLayoutResponse">
+							<ext:failureHandling
+								xmlns:ext="http://ode.apache.org/activityRecovery">
+								<ext:faultOnFailure>true</ext:faultOnFailure>
+							</ext:failureHandling>
+							<bpel:catchAll>
+								<bpel:scope name="SetSoundScapeSourceLayout">
+									<bpel:variables>
+										<bpel:variable name="badClientRequest"
+											messageType="tns:functionRequest"></bpel:variable>
+									</bpel:variables>
+									<bpel:sequence>
+										<bpel:assign validate="no"
+											name="AssignReguestFunction">
+											<bpel:copy>
+												<bpel:from>
+													<bpel:literal>
+														<tns:functionRequest
+															xmlns:tns="http://www.example.org/OrchestratorElements/"
+															xmlns:tns1="http://www.example.org/SoundScapeDataTypes/"
+															xmlns:tns2="http://www.example.org/RegistrationServiceElements/"
+															xmlns:tns3="http://www.example.org/UploadServiceElements/"
+															xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+															<conversationId>conversationId</conversationId>
+															<Message>An error has occured</Message>
+														</tns:functionRequest>
+													</bpel:literal>
+												</bpel:from>
+												<bpel:to variable="badClientRequest"
+													part="functionRequest"></bpel:to>
+											</bpel:copy>
+											<bpel:copy>
+												<bpel:from variable="clientConversationId"></bpel:from>
+												<bpel:to part="functionRequest"
+													variable="badClientRequest">
+													<bpel:query
+														queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+								                        <![CDATA[conversationId]]>
+													</bpel:query>
+												</bpel:to>
+											</bpel:copy>
+										</bpel:assign>
+										<bpel:invoke name="RequestFunction"
+											partnerLink="client" operation="requestFunction"
+											portType="tns:DistributedSoundScapeCallback"
+											inputVariable="badClientRequest">
+											<bpel:correlations>
+												<bpel:correlation
+													set="ClientCorrelationSet" initiate="yes"></bpel:correlation>
+											</bpel:correlations>
+										</bpel:invoke>
+									</bpel:sequence>
+								</bpel:scope>
+							</bpel:catchAll>
+						</bpel:invoke>
 						<bpel:invoke name="RequestFunction"
 							partnerLink="client" operation="requestFunction"
 							portType="tns:DistributedSoundScapeCallback"
@@ -912,21 +1136,58 @@
 							portType="cs:ControlService"
 							inputVariable="ProcessPlaybackCommandRequest"
 							outputVariable="ProcessPlaybackCommandResponse">
-							<ext:failureHandling xmlns:ext="http://ode.apache.org/activityRecovery">
-						        <ext:faultOnFailure>true</ext:faultOnFailure>
-						    </ext:failureHandling>
+							<ext:failureHandling
+								xmlns:ext="http://ode.apache.org/activityRecovery">
+								<ext:faultOnFailure>true</ext:faultOnFailure>
+							</ext:failureHandling>
 							<bpel:catchAll>
-								<bpel:sequence>
-									<bpel:invoke name="RequestFunction"
-										partnerLink="client" operation="requestFunction"
-										portType="tns:DistributedSoundScapeCallback"
-										inputVariable="clientRequest">
-										<bpel:correlations>
-											<bpel:correlation set="ClientCorrelationSet"
-												initiate="yes"></bpel:correlation>
-										</bpel:correlations>
-									</bpel:invoke>
-								</bpel:sequence>
+								<bpel:scope name="ProcessCommand">
+									<bpel:variables>
+										<bpel:variable name="badClientRequest"
+											messageType="tns:functionRequest"></bpel:variable>
+									</bpel:variables>
+									<bpel:sequence>
+										<bpel:assign validate="no"
+											name="AssignReguestFunction">
+											<bpel:copy>
+												<bpel:from>
+													<bpel:literal>
+														<tns:functionRequest
+															xmlns:tns="http://www.example.org/OrchestratorElements/"
+															xmlns:tns1="http://www.example.org/SoundScapeDataTypes/"
+															xmlns:tns2="http://www.example.org/RegistrationServiceElements/"
+															xmlns:tns3="http://www.example.org/UploadServiceElements/"
+															xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+															<conversationId>conversationId</conversationId>
+															<Message>An error has occured</Message>
+														</tns:functionRequest>
+													</bpel:literal>
+												</bpel:from>
+												<bpel:to variable="badClientRequest"
+													part="functionRequest"></bpel:to>
+											</bpel:copy>
+											<bpel:copy>
+												<bpel:from variable="clientConversationId"></bpel:from>
+												<bpel:to part="functionRequest"
+													variable="badClientRequest">
+													<bpel:query
+														queryLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">
+								                        <![CDATA[conversationId]]>
+													</bpel:query>
+												</bpel:to>
+											</bpel:copy>
+										</bpel:assign>
+										<bpel:invoke name="RequestFunction"
+											partnerLink="client" operation="requestFunction"
+											portType="tns:DistributedSoundScapeCallback"
+											inputVariable="badClientRequest">
+											<bpel:correlations>
+												<bpel:correlation
+													set="ClientCorrelationSet" initiate="yes"></bpel:correlation>
+											</bpel:correlations>
+										</bpel:invoke>
+									</bpel:sequence>
+								</bpel:scope>
 							</bpel:catchAll>
 						</bpel:invoke>
 						<bpel:invoke name="RequestFunction"
@@ -958,7 +1219,8 @@
 					variable="finishMessage"></bpel:to>
 			</bpel:copy>
 		</bpel:assign>
-	</bpel:sequence>
+        <bpel:invoke name="Finish" partnerLink="client" operation="finishFunction" portType="tns:DistributedSoundScapeCallback" inputVariable="finishMessage"></bpel:invoke>
+    </bpel:sequence>
 </bpel:process>
 	
 	

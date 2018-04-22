@@ -26,7 +26,7 @@
   </extensions>
   <extensions>
     <extendedObject href="DistributedSoundScape.bpel#/"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1524339835950"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ProcessExtension" modificationStamp="1524390784989"/>
   </extensions>
   <extensions>
     <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.2"/>
@@ -115,14 +115,6 @@
   <extensions>
     <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.11"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
-  </extensions>
-  <extensions>
-    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.11/@copy.0"/>
-    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
   </extensions>
   <extensions>
     <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.8"/>
@@ -549,15 +541,163 @@
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
   </extensions>
   <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.7/@copy.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
     <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.9/@activity/@activities.4/@faultHandler/@catchAll/@activity"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
   </extensions>
   <extensions>
-    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.9/@activity/@activities.4/@faultHandler/@catchAll/@activity/@activities.0"/>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.9/@activity/@activities.4/@faultHandler/@catchAll/@activity/@activity"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
   </extensions>
   <extensions>
-    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.7/@copy.0"/>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.5/@activity/@activities.1/@faultHandler/@catchAll/@activity"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.5/@activity/@activities.1/@faultHandler/@catchAll/@activity/@activity"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.5/@activity/@activities.1/@faultHandler/@catchAll/@activity/@activity/@activities.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.5/@activity/@activities.1/@faultHandler/@catchAll/@activity/@activity/@activities.0/@copy.0"/>
     <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.5/@activity/@activities.1/@faultHandler/@catchAll/@activity/@activity/@activities.0/@copy.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.5/@activity/@activities.1/@faultHandler/@catchAll/@activity/@activity/@activities.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.5/@activity/@activities.1/@faultHandler/@catchAll/@activity/@variables/@children.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.6/@activity/@activities.1/@faultHandler/@catchAll/@activity"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.6/@activity/@activities.1/@faultHandler/@catchAll/@activity/@activity"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.6/@activity/@activities.1/@faultHandler/@catchAll/@activity/@activity/@activities.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.6/@activity/@activities.1/@faultHandler/@catchAll/@activity/@activity/@activities.0/@copy.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.6/@activity/@activities.1/@faultHandler/@catchAll/@activity/@activity/@activities.0/@copy.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.6/@activity/@activities.1/@faultHandler/@catchAll/@activity/@activity/@activities.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.6/@activity/@activities.1/@faultHandler/@catchAll/@activity/@variables/@children.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.7/@activity/@activities.1/@faultHandler/@catchAll/@activity"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.7/@activity/@activities.1/@faultHandler/@catchAll/@activity/@activity"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.7/@activity/@activities.1/@faultHandler/@catchAll/@activity/@activity/@activities.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.7/@activity/@activities.1/@faultHandler/@catchAll/@activity/@activity/@activities.0/@copy.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.7/@activity/@activities.1/@faultHandler/@catchAll/@activity/@activity/@activities.0/@copy.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.7/@activity/@activities.1/@faultHandler/@catchAll/@activity/@activity/@activities.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.7/@activity/@activities.1/@faultHandler/@catchAll/@activity/@variables/@children.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.8/@activity/@activities.2/@faultHandler/@catchAll/@activity"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.8/@activity/@activities.2/@faultHandler/@catchAll/@activity/@activity"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.8/@activity/@activities.2/@faultHandler/@catchAll/@activity/@activity/@activities.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.8/@activity/@activities.2/@faultHandler/@catchAll/@activity/@activity/@activities.0/@copy.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.8/@activity/@activities.2/@faultHandler/@catchAll/@activity/@activity/@activities.0/@copy.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.8/@activity/@activities.2/@faultHandler/@catchAll/@activity/@activity/@activities.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.8/@activity/@activities.2/@faultHandler/@catchAll/@activity/@variables/@children.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.9/@activity/@activities.4/@faultHandler/@catchAll/@activity/@activity/@activities.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.9/@activity/@activities.4/@faultHandler/@catchAll/@activity/@activity/@activities.0/@copy.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.9/@activity/@activities.4/@faultHandler/@catchAll/@activity/@activity/@activities.0/@copy.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.9/@activity/@activities.4/@faultHandler/@catchAll/@activity/@activity/@activities.1"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.10/@activity/@messages.9/@activity/@activities.4/@faultHandler/@catchAll/@activity/@variables/@children.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.11"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.11/@copy.0"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:CopyExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@activity/@activities.12"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:ActivityExtension"/>
+  </extensions>
+  <extensions>
+    <extendedObject href="DistributedSoundScape.bpel#//@variables/@children.38"/>
+    <extensionObject xsi:type="org.eclipse.bpel.ui.uiextensionmodel:VariableExtension"/>
   </extensions>
 </extensionmodel:ExtensionMap>
